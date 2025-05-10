@@ -1,0 +1,10 @@
+clean-fid==0.1.10
+einops==0.8.1
+fonttools==4.57.0
+lpips==0.1.4
+matplotlib==3.10.1
+potracer==0.0.4
+rich==14.0.0
+scikit-image==0.25.2
+tensorboard==2.19.0
+tqdm==4.67.1
