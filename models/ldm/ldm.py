@@ -87,6 +87,16 @@ class LDM(nn.Module):
         # Move model to device
         self.to(self.device)
 
+    def _freeze_vqvae(
+        self,
+    ) -> None:
+        """
+        Freeze VQ-VAE model parameters.
+        """
+        self.vqvae.eval()
+        for param in self.vqvae.parameters():
+            param.requires_grad = False
+
     def _load_pretrained_vqvae(
         self,
         pretrained_vqvae_path: str | Path,
@@ -111,10 +121,6 @@ class LDM(nn.Module):
             weights_only=True,
         )
         self.vqvae.load_state_dict(state_dict)
-        self.vqvae.eval()
-
-        for param in self.vqvae.parameters():
-            param.requires_grad = False
 
     # ===== Core Operations =====
     def forward(
@@ -191,6 +197,9 @@ class LDM(nn.Module):
         """
         if not skip_loading_vqvae:
             self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
+
+        # Freeze VQ-VAE parameters
+        self._freeze_vqvae()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_sample_root = Path(training_config.sample_root)
