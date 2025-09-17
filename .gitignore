@@ -1,6 +1,6 @@
 # 📁 Font Resources and Dataset
-fonts/
-data/
+fonts*/
+data*/
 
 # 📊 Charset Files
 charsets/jf7000_coverage/
@@ -8,8 +8,8 @@ charsets/unihan_coverage/
 charsets/splits/
 
 # 🏋️ Model Checkpoints and Logs
-checkpoints/
-runs/
+checkpoints*/
+runs*/
 
 # 🖼️ Generated Samples
 samples*/

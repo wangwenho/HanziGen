@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_FONT_PATH="fonts/myfont.ttf"
+TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 REFERENCE_FONTS_DIR="fonts/jigmo/"
 
 

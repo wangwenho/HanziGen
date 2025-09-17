@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 import torch
 import torch.optim as optim
@@ -38,8 +39,36 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--eval_batch_size", type=int, help="Batch size for evaluation")
     parser.add_argument("--device", type=str, help="Training device (mps, cpu, cuda)")
+    parser.add_argument(
+        "--resume", type=str, default="false", help="Resume training from checkpoint"
+    )
 
     return parser.parse_args()
+
+
+def load_ldm_checkpoint(
+    ldm: LDM,
+    checkpoint_path: str,
+    device: torch.device,
+) -> None:
+    """
+    Load LDM model weights from checkpoint.
+    """
+    checkpoint = Path(checkpoint_path)
+    if not checkpoint.exists():
+        raise FileNotFoundError(f"LDM checkpoint not found: '{checkpoint_path}'")
+    if not checkpoint.is_file():
+        raise FileNotFoundError(
+            f"Invalid LDM checkpoint path: '{checkpoint_path}' is not a file"
+        )
+
+    print(f"Loading LDM checkpoint from '{checkpoint_path}'")
+    state_dict = torch.load(
+        checkpoint,
+        map_location=device,
+        weights_only=True,
+    )
+    ldm.load_state_dict(state_dict)
 
 
 def train_ldm(
@@ -48,8 +77,11 @@ def train_ldm(
     ldm_model_config: LDMModelConfig,
     training_config: LDMTrainingConfig,
     device: torch.device,
+    resume: bool = False,
 ):
-    """ """
+    """
+    Train LDM.
+    """
     loader = Loader.from_dataset_config(
         dataset_config=dataset_config,
         device=device,
@@ -72,6 +104,13 @@ def train_ldm(
         eta_min=training_config.min_learning_rate,
     )
 
+    if resume:
+        load_ldm_checkpoint(
+            ldm=ldm,
+            checkpoint_path=training_config.model_save_path,
+            device=device,
+        )
+
     print_model_params(
         model=ldm,
     )
@@ -81,12 +120,15 @@ def train_ldm(
         optimizer=optimizer,
         scheduler=scheduler,
         training_config=training_config,
+        skip_loading_vqvae=resume,
     )
 
 
 def main() -> None:
     """ """
     args = parse_args()
+    resume = args.resume.lower() == "true"
+
     dataset_config = update_config_from_args(
         converting_config=LDMDatasetConfig(),
         args=args,
@@ -111,6 +153,7 @@ def main() -> None:
         ldm_model_config=ldm_model_config,
         training_config=training_config,
         device=device,
+        resume=resume,
     )
 
 

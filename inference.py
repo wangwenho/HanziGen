@@ -45,7 +45,9 @@ def inference(
     ldm_inference_config: LDMInferenceConfig,
     device: str,
 ) -> None:
-    """ """
+    """
+    Inference.
+    """
     device = torch.device(device)
     ldm = LDM(
         vqvae_model_config=vqvae_model_config,
@@ -53,12 +55,12 @@ def inference(
         device=device,
     )
 
-    ckpt = torch.load(
+    state_dict = torch.load(
         ldm_inference_config.pretrained_ldm_path,
-        map_location="cpu",
+        map_location=device,
         weights_only=True,
     )
-    ldm.load_state_dict(ckpt, strict=False)
+    ldm.load_state_dict(state_dict)
 
     print_model_params(
         model=ldm,

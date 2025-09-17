@@ -1,13 +1,13 @@
 #!/bin/bash
 
-TARGET_FONT_PATH="fonts/myfont.ttf"
+TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 BLACKLEVEL=0.5
 TURDSIZE=2
 ALPHAMAX=1.0
 OPTTOLERANCE=0.2
 
 
-TARGET_FONT_NAME=$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')
+TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 
 INPUT_DIR="samples_${TARGET_FONT_NAME}/inference/gen"
 OUTPUT_DIR="svgs_${TARGET_FONT_NAME}"

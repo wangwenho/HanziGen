@@ -94,19 +94,23 @@ class LDM(nn.Module):
         """
         Load pre-trained VQ-VAE model weights.
         """
-        pretrained_vqvae_path = Path(pretrained_vqvae_path)
-
-        if not pretrained_vqvae_path.is_file():
+        pretrained_vqvae = Path(pretrained_vqvae_path)
+        if not pretrained_vqvae.exists():
             raise FileNotFoundError(
-                f"VQ-VAE checkpoint path {pretrained_vqvae_path} does not exist."
+                f"Pretrained VQ-VAE checkpoint not found: '{pretrained_vqvae_path}'"
+            )
+        if not pretrained_vqvae.is_file():
+            raise FileNotFoundError(
+                f"Invalid pretrained VQ-VAE checkpoint path: '{pretrained_vqvae_path}' is not a file"
             )
 
-        ckpt = torch.load(
+        print(f"Loading pretrained VQ-VAE from '{pretrained_vqvae_path}'")
+        state_dict = torch.load(
             pretrained_vqvae_path,
             map_location=self.device,
             weights_only=True,
         )
-        self.vqvae.load_state_dict(ckpt)
+        self.vqvae.load_state_dict(state_dict)
         self.vqvae.eval()
 
         for param in self.vqvae.parameters():
@@ -180,11 +184,13 @@ class LDM(nn.Module):
         optimizer: Optimizer,
         scheduler: LRScheduler,
         training_config: LDMTrainingConfig,
+        skip_loading_vqvae: bool = False,
     ) -> None:
         """
         Train the LDM and save the best model checkpoint.
         """
-        self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
+        if not skip_loading_vqvae:
+            self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
 
         log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
             "%Y%m%d-%H%M%S"
@@ -716,4 +722,5 @@ class LDM(nn.Module):
         table.add_row("Total", f"{train_loss:.6f}", f"{val_loss:.6f}")
         table.add_row("Learning Rate", f"{learning_rate:.6f}", "-")
 
+        console.print(table)
         console.print(table)

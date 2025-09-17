@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_FONT_PATH="fonts/myfont.ttf"
+TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 TRAIN_SPLIT_RATIO=0.8
 VAL_SPLIT_RATIO=0.2
 RANDOM_SEED=2025
@@ -11,10 +11,11 @@ SAMPLE_STEPS=50
 IMG_SAVE_INTERVAL=5
 LPIPS_EVAL_INTERVAL=10
 EVAL_BATCH_SIZE=2
-DEVICE="cuda"
+DEVICE="cuda:1"
+RESUME=true
 
 
-TARGET_FONT_NAME=$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')
+TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 
 PRETRAINED_VQVAE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
 MODEL_SAVE_PATH="checkpoints/ldm_${TARGET_FONT_NAME}.pth"
@@ -33,4 +34,5 @@ python train_ldm.py \
     --img_save_interval "$IMG_SAVE_INTERVAL" \
     --lpips_eval_interval "$LPIPS_EVAL_INTERVAL" \
     --eval_batch_size "$EVAL_BATCH_SIZE" \
-    --device "$DEVICE"
+    --device "$DEVICE" \
+    --resume "$RESUME"

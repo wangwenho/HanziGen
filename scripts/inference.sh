@@ -1,15 +1,15 @@
 #!/bin/bash
 
-TARGET_FONT_PATH="fonts/myfont.ttf"
+TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 REFERENCE_FONTS_DIR="fonts/jigmo/"
 BATCH_SIZE=16
 SAMPLE_STEPS=50
 IMG_WIDTH=512
 IMG_HEIGHT=512
-DEVICE="cuda"
+DEVICE="cuda:1"
 
 
-TARGET_FONT_NAME=$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')
+TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 
 CHARSET_PATH="charsets/jf7000_coverage/${TARGET_FONT_NAME}/missing.txt"
 PRETRAINED_LDM_PATH="checkpoints/ldm_${TARGET_FONT_NAME}.pth"
