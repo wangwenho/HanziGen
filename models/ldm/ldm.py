@@ -192,9 +192,14 @@ class LDM(nn.Module):
         if not skip_loading_vqvae:
             self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
 
-        log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_sample_root = Path(training_config.sample_root)
+        training_config.sample_root = str(
+            base_sample_root.parent / f"{base_sample_root.name}_training_{timestamp}"
         )
+        print(f"📁 Training samples will be saved to: {training_config.sample_root}")
+
+        log_dir = Path(training_config.tensorboard_log_dir) / timestamp
         log_dir.mkdir(parents=True, exist_ok=True)
 
         with SummaryWriter(log_dir) as writer:
@@ -619,6 +624,13 @@ class LDM(nn.Module):
         Generate images from a charset file.
         """
         self.eval()
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_sample_root = Path(inference_config.sample_root)
+        inference_config.sample_root = str(
+            base_sample_root.parent / f"{base_sample_root.name}_inference_{timestamp}"
+        )
+        print(f"📁 Inference samples will be saved to: {inference_config.sample_root}")
 
         tgt_generator = GlyphImageGenerator.from_target_font(
             target_font_path=target_font_path,
