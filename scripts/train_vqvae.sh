@@ -8,7 +8,8 @@ BATCH_SIZE=8
 LEARNING_RATE=1e-3
 NUM_EPOCHS=100
 DEVICE="cuda:1"
-RESUME=true
+RESUME=false
+USE_AMP=true
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
@@ -23,4 +24,5 @@ python train_vqvae.py \
     --num_epochs "$NUM_EPOCHS" \
     --model_save_path "$MODEL_SAVE_PATH" \
     --device "$DEVICE" \
-    --resume "$RESUME" 
+    --resume "$RESUME" \
+    --use_amp "$USE_AMP"

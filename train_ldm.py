@@ -3,6 +3,7 @@ from pathlib import Path
 
 import torch
 import torch.optim as optim
+from torch.amp import GradScaler
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from configs import (
@@ -42,6 +43,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--resume", type=str, default="false", help="Resume training from checkpoint"
     )
+    parser.add_argument(
+        "--use_amp", type=str, default="false", help="Use Automatic Mixed Precision"
+    )
 
     return parser.parse_args()
 
@@ -78,6 +82,7 @@ def train_ldm(
     training_config: LDMTrainingConfig,
     device: torch.device,
     resume: bool = False,
+    use_amp: bool = False,
 ):
     """
     Train LDM.
@@ -104,6 +109,8 @@ def train_ldm(
         eta_min=training_config.min_learning_rate,
     )
 
+    scaler = GradScaler(device=device) if use_amp else None
+
     if resume:
         load_ldm_checkpoint(
             ldm=ldm,
@@ -120,7 +127,8 @@ def train_ldm(
         optimizer=optimizer,
         scheduler=scheduler,
         training_config=training_config,
-        skip_loading_vqvae=resume,
+        resume=resume,
+        scaler=scaler,
     )
 
 
@@ -128,6 +136,7 @@ def main() -> None:
     """ """
     args = parse_args()
     resume = args.resume.lower() == "true"
+    use_amp = args.use_amp.lower() == "true"
 
     dataset_config = update_config_from_args(
         converting_config=LDMDatasetConfig(),
@@ -154,6 +163,7 @@ def main() -> None:
         training_config=training_config,
         device=device,
         resume=resume,
+        use_amp=use_amp,
     )
 
 

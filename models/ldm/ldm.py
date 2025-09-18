@@ -7,6 +7,7 @@ from PIL import Image
 from rich.console import Console
 from rich.table import Table
 from torch import Tensor
+from torch.amp import GradScaler, autocast
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import DataLoader
@@ -143,6 +144,7 @@ class LDM(nn.Module):
         batch: dict[str, Tensor],
         is_training: bool,
         optimizer: Optimizer | None = None,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Process a single batch of data.
@@ -150,21 +152,42 @@ class LDM(nn.Module):
         tgt_imgs = batch["tgt_img"].to(self.device)
         ref_imgs = batch["ref_img"].to(self.device)
 
-        batch_size = tgt_imgs.shape[0]
-        t = self.scheduler.sample_timesteps(batch_size)
+        if scaler is not None:
+            with autocast(device_type=self.device.type):
+                batch_size = tgt_imgs.shape[0]
+                t = self.scheduler.sample_timesteps(batch_size)
 
-        tgt_latents = self._encode_to_latent(tgt_imgs)
-        x_t, noise = self.scheduler.add_noise(tgt_latents, t)
-        ref_latents = self._encode_to_latent(ref_imgs)
+                tgt_latents = self._encode_to_latent(tgt_imgs)
+                x_t, noise = self.scheduler.add_noise(tgt_latents, t)
+                ref_latents = self._encode_to_latent(ref_imgs)
 
-        noise_pred = self(x_t, ref_latents, t)
-        loss = self.loss_fn(noise_pred, noise)
+                noise_pred = self(x_t, ref_latents, t)
+                loss = self.loss_fn(noise_pred, noise)
 
-        if is_training and optimizer is not None:
-            optimizer.zero_grad()
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
-            optimizer.step()
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                scaler.step(optimizer)
+                scaler.update()
+
+        else:
+            batch_size = tgt_imgs.shape[0]
+            t = self.scheduler.sample_timesteps(batch_size)
+
+            tgt_latents = self._encode_to_latent(tgt_imgs)
+            x_t, noise = self.scheduler.add_noise(tgt_latents, t)
+            ref_latents = self._encode_to_latent(ref_imgs)
+
+            noise_pred = self(x_t, ref_latents, t)
+            loss = self.loss_fn(noise_pred, noise)
+
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                optimizer.step()
 
         return loss.item()
 
@@ -190,12 +213,13 @@ class LDM(nn.Module):
         optimizer: Optimizer,
         scheduler: LRScheduler,
         training_config: LDMTrainingConfig,
-        skip_loading_vqvae: bool = False,
+        resume: bool = False,
+        scaler: GradScaler | None = None,
     ) -> None:
         """
         Train the LDM and save the best model checkpoint.
         """
-        if not skip_loading_vqvae:
+        if not resume:
             self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
 
         # Freeze VQ-VAE parameters
@@ -231,6 +255,7 @@ class LDM(nn.Module):
                 train_loss, val_loss = self._run_epoch(
                     loader=loader,
                     optimizer=optimizer,
+                    scaler=scaler,
                 )
 
                 # Update learning rate
@@ -284,6 +309,7 @@ class LDM(nn.Module):
         self,
         loader: Loader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> tuple[float, float]:
         """
         Run one epoch of training and validation.
@@ -291,8 +317,15 @@ class LDM(nn.Module):
         train_loader = loader.loader.train
         val_loader = loader.loader.val
 
-        train_loss = self._train_one_epoch(train_loader, optimizer)
-        val_loss = self._validate_one_epoch(val_loader)
+        train_loss = self._train_one_epoch(
+            train_loader=train_loader,
+            optimizer=optimizer,
+            scaler=scaler,
+        )
+        val_loss = self._validate_one_epoch(
+            val_loader=val_loader,
+            scaler=scaler,
+        )
 
         return train_loss, val_loss
 
@@ -300,6 +333,7 @@ class LDM(nn.Module):
         self,
         train_loader: DataLoader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Train the model for one epoch.
@@ -312,6 +346,7 @@ class LDM(nn.Module):
                 batch=batch,
                 is_training=True,
                 optimizer=optimizer,
+                scaler=scaler,
             )
             epoch_loss += batch_loss
 
@@ -321,6 +356,7 @@ class LDM(nn.Module):
     def _validate_one_epoch(
         self,
         val_loader: DataLoader,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Validate the model for one epoch.
@@ -333,6 +369,7 @@ class LDM(nn.Module):
                 batch=batch,
                 is_training=False,
                 optimizer=None,
+                scaler=scaler,
             )
             epoch_loss += batch_loss
 
@@ -743,5 +780,4 @@ class LDM(nn.Module):
         table.add_row("Total", f"{train_loss:.6f}", f"{val_loss:.6f}")
         table.add_row("Learning Rate", f"{learning_rate:.6f}", "-")
 
-        console.print(table)
         console.print(table)

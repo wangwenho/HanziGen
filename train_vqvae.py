@@ -3,6 +3,7 @@ from pathlib import Path
 
 import torch
 import torch.optim as optim
+from torch.amp import GradScaler
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from configs import VQVAEDatasetConfig, VQVAEModelConfig, VQVAETrainingConfig
@@ -26,6 +27,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", type=str, help="Training device (mps, cpu, cuda)")
     parser.add_argument(
         "--resume", type=str, default="false", help="Resume training from checkpoint"
+    )
+    parser.add_argument(
+        "--use_amp", type=str, default="false", help="Use Automatic Mixed Precision"
     )
     return parser.parse_args()
 
@@ -61,6 +65,7 @@ def train_vqvae(
     training_config: VQVAETrainingConfig,
     device: torch.device,
     resume: bool = False,
+    use_amp: bool = False,
 ):
     """
     Train VQ-VAE.
@@ -86,6 +91,8 @@ def train_vqvae(
         eta_min=training_config.min_learning_rate,
     )
 
+    scaler = GradScaler(device=device) if use_amp else None
+
     if resume:
         load_vqvae_checkpoint(
             vqvae=vqvae,
@@ -102,6 +109,7 @@ def train_vqvae(
         optimizer=optimizer,
         scheduler=scheduler,
         training_config=training_config,
+        scaler=scaler,
     )
 
 
@@ -109,6 +117,7 @@ def main() -> None:
     """ """
     args = parse_args()
     resume = args.resume.lower() == "true"
+    use_amp = args.use_amp.lower() == "true"
 
     dataset_config = update_config_from_args(
         converting_config=VQVAEDatasetConfig(),
@@ -130,6 +139,7 @@ def main() -> None:
         training_config=training_config,
         device=device,
         resume=resume,
+        use_amp=use_amp,
     )
 
 

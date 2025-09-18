@@ -12,7 +12,8 @@ IMG_SAVE_INTERVAL=5
 LPIPS_EVAL_INTERVAL=10
 EVAL_BATCH_SIZE=2
 DEVICE="cuda:1"
-RESUME=true
+RESUME=false
+USE_AMP=true
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
@@ -35,4 +36,5 @@ python train_ldm.py \
     --lpips_eval_interval "$LPIPS_EVAL_INTERVAL" \
     --eval_batch_size "$EVAL_BATCH_SIZE" \
     --device "$DEVICE" \
-    --resume "$RESUME"
+    --resume "$RESUME" \
+    --use_amp "$USE_AMP"

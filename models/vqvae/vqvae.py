@@ -6,6 +6,7 @@ import torch.nn as nn
 from rich.console import Console
 from rich.table import Table
 from torch import Tensor
+from torch.amp import GradScaler, autocast
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import DataLoader
@@ -78,6 +79,7 @@ class VQVAE(nn.Module):
         batch: dict[str, Tensor],
         is_training: bool,
         optimizer: Optimizer | None = None,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Process a single batch of data.
@@ -85,21 +87,41 @@ class VQVAE(nn.Module):
         tgt_imgs = batch["tgt_img"].to(self.device)
         ref_imgs = batch["ref_img"].to(self.device)
 
-        tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
-        tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
+        if scaler is not None:
+            with autocast(device_type=self.device.type):
+                tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
+                tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
 
-        ref_x_recon, ref_vq_loss = self(ref_imgs)
-        ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
+                ref_x_recon, ref_vq_loss = self(ref_imgs)
+                ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
 
-        recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
-        vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
-        total_loss = recon_loss + vq_loss
+                recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
+                vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
+                total_loss = recon_loss + vq_loss
 
-        if is_training and optimizer is not None:
-            optimizer.zero_grad()
-            total_loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
-            optimizer.step()
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                scaler.scale(total_loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                scaler.step(optimizer)
+                scaler.update()
+        else:
+            tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
+            tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
+
+            ref_x_recon, ref_vq_loss = self(ref_imgs)
+            ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
+
+            recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
+            vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
+            total_loss = recon_loss + vq_loss
+
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                total_loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                optimizer.step()
 
         losses = {
             "total": total_loss.item(),
@@ -116,12 +138,13 @@ class VQVAE(nn.Module):
         optimizer: Optimizer,
         scheduler: LRScheduler,
         training_config: VQVAETrainingConfig,
+        scaler: GradScaler | None = None,
     ) -> None:
         """
         Train the VQ-VAE model and save the best model checkpoint.
         """
         log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
+            "%Y%m%d_%H%M%S"
         )
         log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -138,6 +161,7 @@ class VQVAE(nn.Module):
                 train_losses, val_losses = self._run_epoch(
                     loader=loader,
                     optimizer=optimizer,
+                    scaler=scaler,
                 )
 
                 # Update learning rate
@@ -172,6 +196,7 @@ class VQVAE(nn.Module):
         self,
         loader: Loader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> tuple[dict[str, float], dict[str, float]]:
         """
         Run one epoch of training and validation.
@@ -179,8 +204,15 @@ class VQVAE(nn.Module):
         train_loader = loader.loader.train
         val_loader = loader.loader.val
 
-        train_losses = self._train_one_epoch(train_loader, optimizer)
-        val_losses = self._validate_one_epoch(val_loader)
+        train_losses = self._train_one_epoch(
+            train_loader=train_loader,
+            optimizer=optimizer,
+            scaler=scaler,
+        )
+        val_losses = self._validate_one_epoch(
+            val_loader=val_loader,
+            scaler=scaler,
+        )
 
         return train_losses, val_losses
 
@@ -188,6 +220,7 @@ class VQVAE(nn.Module):
         self,
         train_loader: DataLoader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Train the model for one epoch.
@@ -200,6 +233,7 @@ class VQVAE(nn.Module):
                 batch=batch,
                 is_training=True,
                 optimizer=optimizer,
+                scaler=scaler,
             )
             for k in epoch_losses.keys():
                 epoch_losses[k] += batch_losses[k]
@@ -213,6 +247,7 @@ class VQVAE(nn.Module):
     def _validate_one_epoch(
         self,
         val_loader: DataLoader,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Validate the model for one epoch.
@@ -225,6 +260,7 @@ class VQVAE(nn.Module):
                 batch=batch,
                 is_training=False,
                 optimizer=None,
+                scaler=scaler,
             )
             for k in epoch_losses.keys():
                 epoch_losses[k] += batch_losses[k]
