@@ -9,7 +9,6 @@ OPTTOLERANCE=0.2
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
-
 INPUT_DIR="samples_${TARGET_FONT_NAME}_inference_${TIMESTAMP}/inference/gen/"
 OUTPUT_DIR="svgs_${TARGET_FONT_NAME}_${TIMESTAMP}/"
 

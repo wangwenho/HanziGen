@@ -9,11 +9,10 @@ LEARNING_RATE=1e-3
 NUM_EPOCHS=100
 DEVICE="cuda:1"
 RESUME=false
-USE_AMP=true
+USE_AMP=false
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
-
 MODEL_SAVE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
 
 python train_vqvae.py \

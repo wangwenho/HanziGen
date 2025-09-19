@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 import torch
@@ -11,25 +12,63 @@ from datasets.loader import Loader
 from models import VQVAE
 from utils.argparse.argparse_utils import update_config_from_args
 from utils.hardware.hardware_utils import print_model_params, select_device
+from utils.validation.project_validator import ProjectValidationError, ProjectValidator
 
 
 def parse_args() -> argparse.Namespace:
-    """ """
-    parser = argparse.ArgumentParser(description="Train VQVAE model")
-    parser.add_argument(
-        "--split_ratios", type=float, nargs=2, help="Train/val split ratios"
-    )
-    parser.add_argument("--random_seed", type=int, help="Random seed")
-    parser.add_argument("--batch_size", type=int, help="Batch size")
-    parser.add_argument("--learning_rate", type=float, help="Learning rate")
-    parser.add_argument("--num_epochs", type=int, help="Number of epochs")
-    parser.add_argument("--model_save_path", type=str, help="Model save path")
-    parser.add_argument("--device", type=str, help="Training device (mps, cpu, cuda)")
-    parser.add_argument(
-        "--resume", type=str, default="false", help="Resume training from checkpoint"
+    """
+    Parse command-line arguments for VQ-VAE training.
+    """
+    parser = argparse.ArgumentParser(
+        description="Train VQVAE model",
     )
     parser.add_argument(
-        "--use_amp", type=str, default="false", help="Use Automatic Mixed Precision"
+        "--split_ratios",
+        type=float,
+        nargs=2,
+        help="Train/val split ratios",
+    )
+    parser.add_argument(
+        "--random_seed",
+        type=int,
+        help="Random seed",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        help="Batch size",
+    )
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        help="Learning rate",
+    )
+    parser.add_argument(
+        "--num_epochs",
+        type=int,
+        help="Number of epochs",
+    )
+    parser.add_argument(
+        "--model_save_path",
+        type=str,
+        help="Model save path",
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        help="Training device (mps, cpu, cuda)",
+    )
+    parser.add_argument(
+        "--resume",
+        type=str,
+        default="false",
+        help="Resume training from checkpoint",
+    )
+    parser.add_argument(
+        "--use_amp",
+        type=str,
+        default="false",
+        help="Use Automatic Mixed Precision",
     )
     return parser.parse_args()
 
@@ -68,7 +107,7 @@ def train_vqvae(
     use_amp: bool = False,
 ):
     """
-    Train VQ-VAE.
+    Train VQ-VAE model.
     """
     loader = Loader.from_dataset_config(
         dataset_config=dataset_config,
@@ -114,33 +153,45 @@ def train_vqvae(
 
 
 def main() -> None:
-    """ """
-    args = parse_args()
-    resume = args.resume.lower() == "true"
-    use_amp = args.use_amp.lower() == "true"
+    """
+    Main function to run the VQ-VAE training process.
+    """
+    try:
+        args = parse_args()
+        resume = args.resume.lower() == "true"
+        use_amp = args.use_amp.lower() == "true"
 
-    dataset_config = update_config_from_args(
-        converting_config=VQVAEDatasetConfig(),
-        args=args,
-    )
-    model_config = update_config_from_args(
-        converting_config=VQVAEModelConfig(),
-        args=args,
-    )
-    training_config = update_config_from_args(
-        converting_config=VQVAETrainingConfig(),
-        args=args,
-    )
-    device = select_device(args.device)
+        if resume:
+            ProjectValidator.validate_checkpoint_file(
+                file_path=args.model_save_path,
+                name="VQ-VAE model checkpoint",
+            )
 
-    train_vqvae(
-        dataset_config=dataset_config,
-        model_config=model_config,
-        training_config=training_config,
-        device=device,
-        resume=resume,
-        use_amp=use_amp,
-    )
+        dataset_config = update_config_from_args(
+            converting_config=VQVAEDatasetConfig(),
+            args=args,
+        )
+        model_config = update_config_from_args(
+            converting_config=VQVAEModelConfig(),
+            args=args,
+        )
+        training_config = update_config_from_args(
+            converting_config=VQVAETrainingConfig(),
+            args=args,
+        )
+        device = select_device(args.device)
+
+        train_vqvae(
+            dataset_config=dataset_config,
+            model_config=model_config,
+            training_config=training_config,
+            device=device,
+            resume=resume,
+            use_amp=use_amp,
+        )
+    except ProjectValidationError as e:
+        print(f"❌ {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

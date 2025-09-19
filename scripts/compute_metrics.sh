@@ -7,7 +7,6 @@ DEVICE="cuda:1"
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
-
 GENERATED_IMG_DIR="samples_${TARGET_FONT_NAME}_inference_${TIMESTAMP}/inference/gen/"
 GROUND_TRUTH_IMG_DIR="samples_${TARGET_FONT_NAME}_inference_${TIMESTAMP}/inference/gt/"
 
