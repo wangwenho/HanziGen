@@ -48,8 +48,8 @@ class LDMTrainingConfig:
     sample_root: str = "samples"
     train_split: str = "train"
     val_split: str = "val"
-    gt_split: str = "eval_outputs/gt"
-    gen_split: str = "eval_outputs/gen"
+    gt_split: str = "evaluation/gt"
+    gen_split: str = "evaluation/gen"
 
     sample_steps: int = 50
 

@@ -243,7 +243,7 @@ class LDM(nn.Module):
             # Save ground truth images for evaluation
             self._save_evaluation_ground_truth(
                 loader=loader,
-                split="eval_outputs/gt",
+                split=training_config.gt_split,
                 sample_root=training_config.sample_root,
             )
 
