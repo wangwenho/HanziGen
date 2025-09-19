@@ -11,7 +11,8 @@ DEVICE="cuda:1"
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 
-CHARSET_PATH="charsets/jf7000_coverage/${TARGET_FONT_NAME}/missing.txt"
+# CHARSET_PATH="charsets/jf7000_coverage/${TARGET_FONT_NAME}/missing.txt"
+CHARSET_PATH="charsets/test/repeats.txt"
 PRETRAINED_LDM_PATH="checkpoints/ldm_${TARGET_FONT_NAME}.pth"
 SAMPLE_ROOT="samples_${TARGET_FONT_NAME}/"
 
@@ -26,3 +27,10 @@ python inference.py \
     --sample_steps "$SAMPLE_STEPS" \
     --img_size "$IMG_WIDTH" "$IMG_HEIGHT" \
     --device "$DEVICE"
+
+if [ $? -eq 0 ]; then
+    echo "✅ Inference completed successfully!"
+else
+    echo "❌ Inference failed!"
+    exit 1
+fi

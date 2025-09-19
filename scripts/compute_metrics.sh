@@ -16,3 +16,10 @@ python compute_metrics.py \
     --ground_truth_img_dir "$GROUND_TRUTH_IMG_DIR" \
     --eval_batch_size "$EVAL_BATCH_SIZE" \
     --device "$DEVICE"
+
+if [ $? -eq 0 ]; then
+    echo "✅ Metric computation completed successfully!"
+else
+    echo "❌ Metric computation failed!"
+    exit 1
+fi

@@ -38,3 +38,10 @@ python train_ldm.py \
     --device "$DEVICE" \
     --resume "$RESUME" \
     --use_amp "$USE_AMP"
+
+if [ $? -eq 0 ]; then
+    echo "✅ LDM training completed successfully!"
+else
+    echo "❌ LDM training failed!"
+    exit 1
+fi

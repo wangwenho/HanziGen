@@ -11,9 +11,21 @@ TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 
 SOURCE_CHARSET_PATH="charsets/unihan_coverage/${TARGET_FONT_NAME}/covered.txt"
 
+if [ -d "data" ]; then
+    echo "🗑️  Removing existing data/ directory..."
+    rm -rf data/
+fi
+
 python prepare_dataset.py \
     --target_font_path "$TARGET_FONT_PATH" \
     --reference_fonts_dir "$REFERENCE_FONTS_DIR" \
     --source_charset_path "$SOURCE_CHARSET_PATH" \
     --img_size "$IMG_WIDTH" "$IMG_HEIGHT" \
     --sample_ratio "$SAMPLE_RATIO"
+
+if [ $? -eq 0 ]; then
+    echo "✅ Dataset preparation completed successfully!"
+else
+    echo "❌ Dataset preparation failed!"
+    exit 1
+fi

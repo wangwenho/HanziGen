@@ -26,3 +26,10 @@ python train_vqvae.py \
     --device "$DEVICE" \
     --resume "$RESUME" \
     --use_amp "$USE_AMP"
+
+if [ $? -eq 0 ]; then
+    echo "✅ VQ-VAE training completed successfully!"
+else
+    echo "❌ VQ-VAE training failed!"
+    exit 1
+fi
