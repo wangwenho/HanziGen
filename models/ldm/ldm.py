@@ -98,24 +98,24 @@ class LDM(nn.Module):
         for param in self.vqvae.parameters():
             param.requires_grad = False
 
-    def _load_pretrained_vqvae(
+    def _load_pretrained_vqvae_checkpoint(
         self,
         pretrained_vqvae_path: str | Path,
     ) -> None:
         """
-        Load pre-trained VQ-VAE model weights.
+        Load pre-trained VQ-VAE model weights from checkpoint.
         """
         pretrained_vqvae = Path(pretrained_vqvae_path)
         if not pretrained_vqvae.exists():
             raise FileNotFoundError(
-                f"Pretrained VQ-VAE checkpoint not found: '{pretrained_vqvae_path}'"
+                f"❌ Pretrained VQ-VAE model checkpoint not found: {pretrained_vqvae_path}"
             )
         if not pretrained_vqvae.is_file():
             raise FileNotFoundError(
-                f"Invalid pretrained VQ-VAE checkpoint path: '{pretrained_vqvae_path}' is not a file"
+                f"❌ Pretrained VQ-VAE model checkpoint is not a file: {pretrained_vqvae_path}"
             )
 
-        print(f"Loading pretrained VQ-VAE from '{pretrained_vqvae_path}'")
+        print(f"📂 Loading pretrained VQ-VAE model checkpoint: {pretrained_vqvae_path}")
         state_dict = torch.load(
             pretrained_vqvae_path,
             map_location=self.device,
@@ -220,7 +220,9 @@ class LDM(nn.Module):
         Train the LDM and save the best model checkpoint.
         """
         if not resume:
-            self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
+            self._load_pretrained_vqvae_checkpoint(
+                training_config.pretrained_vqvae_path
+            )
 
         # Freeze VQ-VAE parameters
         self._freeze_vqvae()

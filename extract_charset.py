@@ -31,9 +31,9 @@ def parse_args() -> argparse.Namespace:
         help="Train/val split ratios",
     )
     parser.add_argument(
-        "--random_seed",
+        "--split_random_seed",
         type=int,
-        help="Random seed",
+        help="Split random seed",
     )
     parser.add_argument(
         "--device",

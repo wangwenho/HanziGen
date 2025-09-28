@@ -3,7 +3,7 @@
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 TRAIN_SPLIT_RATIO=0.8
 VAL_SPLIT_RATIO=0.2
-RANDOM_SEED=2025
+SPLIT_RANDOM_SEED=2025
 BATCH_SIZE=8
 LEARNING_RATE=1e-3
 NUM_EPOCHS=100
@@ -20,7 +20,7 @@ SAMPLE_ROOT="samples_${TARGET_FONT_NAME}/"
 
 python train_vqvae.py \
     --split_ratios "$TRAIN_SPLIT_RATIO" "$VAL_SPLIT_RATIO" \
-    --random_seed "$RANDOM_SEED" \
+    --split_random_seed "$SPLIT_RANDOM_SEED" \
     --batch_size "$BATCH_SIZE" \
     --learning_rate "$LEARNING_RATE" \
     --num_epochs "$NUM_EPOCHS" \

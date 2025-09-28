@@ -12,7 +12,7 @@ class VQVAEDatasetConfig:
 
     splits_root: str = "charsets"
     split_ratios: tuple[float, float] = (0.8, 0.2)
-    random_seed: int = 2025
+    split_random_seed: int = 2025
     batch_size: int = 8
     num_workers: int = 4
 

@@ -29,9 +29,9 @@ def parse_args() -> argparse.Namespace:
         help="Train/val split ratios",
     )
     parser.add_argument(
-        "--random_seed",
+        "--split_random_seed",
         type=int,
-        help="Random seed",
+        help="Split random seed",
     )
     parser.add_argument(
         "--batch_size",
@@ -98,13 +98,15 @@ def load_vqvae_checkpoint(
     """
     checkpoint = Path(checkpoint_path)
     if not checkpoint.exists():
-        raise FileNotFoundError(f"VQ-VAE checkpoint not found: '{checkpoint_path}'")
+        raise FileNotFoundError(
+            f"❌ VQ-VAE model checkpoint not found: {checkpoint_path}"
+        )
     if not checkpoint.is_file():
         raise FileNotFoundError(
-            f"Invalid VQ-VAE checkpoint path: '{checkpoint_path}' is not a file"
+            f"❌ VQ-VAE model checkpoint is not a file: {checkpoint_path}"
         )
 
-    print(f"Loading VQ-VAE checkpoint from '{checkpoint_path}'")
+    print(f"📁 Loading VQ-VAE model checkpoint: {checkpoint_path}")
     state_dict = torch.load(
         checkpoint,
         map_location=device,

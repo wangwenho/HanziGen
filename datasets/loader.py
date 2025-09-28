@@ -32,7 +32,7 @@ class TrainValLoader:
         train_dataset, val_dataset = split_dataset(
             dataset=dataset,
             split_ratios=dataset_config.split_ratios,
-            random_seed=dataset_config.random_seed,
+            random_seed=dataset_config.split_random_seed,
         )
 
         train_loader = DataLoader(
