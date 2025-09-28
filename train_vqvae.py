@@ -59,6 +59,16 @@ def parse_args() -> argparse.Namespace:
         help="TensorBoard log directory",
     )
     parser.add_argument(
+        "--sample_root",
+        type=str,
+        help="Sample root directory",
+    )
+    parser.add_argument(
+        "--img_save_interval",
+        type=int,
+        help="Image save interval",
+    )
+    parser.add_argument(
         "--device",
         type=str,
         help="Training device (mps, cpu, cuda)",

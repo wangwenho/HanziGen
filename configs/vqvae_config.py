@@ -43,3 +43,9 @@ class VQVAETrainingConfig:
     model_save_path: str = "checkpoints/vqvae.pth"
 
     tensorboard_log_dir: str = "runs/VQVAE"
+
+    sample_root: str = "samples"
+    train_split: str = "train"
+    val_split: str = "val"
+
+    img_save_interval: int = 5

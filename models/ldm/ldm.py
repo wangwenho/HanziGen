@@ -226,8 +226,11 @@ class LDM(nn.Module):
         self._freeze_vqvae()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         base_sample_root = Path(training_config.sample_root)
-        training_config.sample_root = str(base_sample_root / f"training_{timestamp}")
+        training_config.sample_root = str(
+            base_sample_root / f"ldm_training_{timestamp}"
+        )
         print(f"📁 Training samples will be saved to: {training_config.sample_root}")
 
         log_dir = Path(training_config.tensorboard_log_dir) / timestamp
@@ -235,7 +238,6 @@ class LDM(nn.Module):
         print(f"📊 TensorBoard logs will be saved to: {log_dir}")
 
         with SummaryWriter(log_dir) as writer:
-
             model_save_path = Path(training_config.model_save_path)
             model_save_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -622,9 +624,12 @@ class LDM(nn.Module):
         split: str,
     ) -> None:
         """
-        Generate and saves combined images from a DataLoader.
+        Create a triple comparison image: Reference | Target | Generated
         """
         self.eval()
+
+        sample_dir = Path(training_config.sample_root) / split
+        sample_dir.mkdir(parents=True, exist_ok=True)
 
         batch = next(iter(loader))
         tgt_imgs = batch["tgt_img"].to(self.device)
@@ -635,9 +640,6 @@ class LDM(nn.Module):
             ref_imgs=ref_imgs,
             config=training_config,
         )
-
-        sample_dir = Path(training_config.sample_root) / split
-        sample_dir.mkdir(parents=True, exist_ok=True)
 
         for gen_pil_img, tgt_img, ref_img, img_name in zip(
             generated_pil_imgs, tgt_imgs, ref_imgs, img_names
@@ -672,7 +674,9 @@ class LDM(nn.Module):
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_sample_root = Path(inference_config.sample_root)
-        inference_config.sample_root = str(base_sample_root / f"inference_{timestamp}")
+        inference_config.sample_root = str(
+            base_sample_root / f"ldm_inference_{timestamp}"
+        )
         print(f"📁 Inference samples will be saved to: {inference_config.sample_root}")
 
         tgt_generator = GlyphImageGenerator.from_target_font(
