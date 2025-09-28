@@ -54,6 +54,11 @@ def parse_args() -> argparse.Namespace:
         help="Model save path",
     )
     parser.add_argument(
+        "--tensorboard_log_dir",
+        type=str,
+        help="TensorBoard log directory",
+    )
+    parser.add_argument(
         "--device",
         type=str,
         help="Training device (mps, cpu, cuda)",

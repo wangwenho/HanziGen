@@ -64,6 +64,11 @@ def parse_args() -> argparse.Namespace:
         help="Model save path",
     )
     parser.add_argument(
+        "--tensorboard_log_dir",
+        type=str,
+        help="TensorBoard log directory",
+    )
+    parser.add_argument(
         "--sample_root",
         type=str,
         help="Sample root directory",

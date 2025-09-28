@@ -227,13 +227,12 @@ class LDM(nn.Module):
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_sample_root = Path(training_config.sample_root)
-        training_config.sample_root = str(
-            base_sample_root.parent / f"{base_sample_root.name}_training_{timestamp}"
-        )
+        training_config.sample_root = str(base_sample_root / f"training_{timestamp}")
         print(f"📁 Training samples will be saved to: {training_config.sample_root}")
 
         log_dir = Path(training_config.tensorboard_log_dir) / timestamp
         log_dir.mkdir(parents=True, exist_ok=True)
+        print(f"📊 TensorBoard logs will be saved to: {log_dir}")
 
         with SummaryWriter(log_dir) as writer:
 
@@ -673,9 +672,7 @@ class LDM(nn.Module):
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_sample_root = Path(inference_config.sample_root)
-        inference_config.sample_root = str(
-            base_sample_root.parent / f"{base_sample_root.name}_inference_{timestamp}"
-        )
+        inference_config.sample_root = str(base_sample_root / f"inference_{timestamp}")
         print(f"📁 Inference samples will be saved to: {inference_config.sample_root}")
 
         tgt_generator = GlyphImageGenerator.from_target_font(

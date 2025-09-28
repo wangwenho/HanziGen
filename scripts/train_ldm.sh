@@ -19,6 +19,7 @@ USE_AMP=false
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 PRETRAINED_VQVAE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
 MODEL_SAVE_PATH="checkpoints/ldm_${TARGET_FONT_NAME}.pth"
+TENSORBOARD_LOG_DIR="runs/LDM_${TARGET_FONT_NAME}/"
 SAMPLE_ROOT="samples_${TARGET_FONT_NAME}/"
 
 python train_ldm.py \
@@ -29,6 +30,7 @@ python train_ldm.py \
     --num_epochs "$NUM_EPOCHS" \
     --pretrained_vqvae_path "$PRETRAINED_VQVAE_PATH" \
     --model_save_path "$MODEL_SAVE_PATH" \
+    --tensorboard_log_dir "$TENSORBOARD_LOG_DIR" \
     --sample_root "$SAMPLE_ROOT" \
     --sample_steps "$SAMPLE_STEPS" \
     --img_save_interval "$IMG_SAVE_INTERVAL" \

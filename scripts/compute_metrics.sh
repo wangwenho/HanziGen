@@ -1,14 +1,14 @@
 #!/bin/bash
 
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
-TIMESTAMP="20250918_215849"
+TIMESTAMP="20250928_103437"
 EVAL_BATCH_SIZE=2
 DEVICE="cuda:1"
 
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
-GENERATED_IMG_DIR="samples_${TARGET_FONT_NAME}_inference_${TIMESTAMP}/inference/gen/"
-GROUND_TRUTH_IMG_DIR="samples_${TARGET_FONT_NAME}_inference_${TIMESTAMP}/inference/gt/"
+GENERATED_IMG_DIR="samples_${TARGET_FONT_NAME}/inference_${TIMESTAMP}/infer/gen/"
+GROUND_TRUTH_IMG_DIR="samples_${TARGET_FONT_NAME}/inference_${TIMESTAMP}/infer/gt/"
 
 python compute_metrics.py \
     --generated_img_dir "$GENERATED_IMG_DIR" \

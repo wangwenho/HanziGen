@@ -143,10 +143,10 @@ class VQVAE(nn.Module):
         """
         Train the VQ-VAE model and save the best model checkpoint.
         """
-        log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
-            "%Y%m%d_%H%M%S"
-        )
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_dir = Path(training_config.tensorboard_log_dir) / timestamp
         log_dir.mkdir(parents=True, exist_ok=True)
+        print(f"📊 TensorBoard logs will be saved to: {log_dir}")
 
         with SummaryWriter(log_dir) as writer:
 

@@ -14,6 +14,7 @@ USE_AMP=false
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 MODEL_SAVE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
+TENSORBOARD_LOG_DIR="runs/VQVAE_${TARGET_FONT_NAME}"
 
 python train_vqvae.py \
     --split_ratios "$TRAIN_SPLIT_RATIO" "$VAL_SPLIT_RATIO" \
@@ -22,6 +23,7 @@ python train_vqvae.py \
     --learning_rate "$LEARNING_RATE" \
     --num_epochs "$NUM_EPOCHS" \
     --model_save_path "$MODEL_SAVE_PATH" \
+    --tensorboard_log_dir "$TENSORBOARD_LOG_DIR" \
     --device "$DEVICE" \
     --resume "$RESUME" \
     --use_amp "$USE_AMP"

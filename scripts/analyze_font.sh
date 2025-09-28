@@ -15,4 +15,4 @@ if [ $? -eq 0 ]; then
 else
     echo "❌ Font analysis failed!"
     exit 1
-fi
+fiㄇ
