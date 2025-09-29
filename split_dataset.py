@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def extract_train_val_charset(
+def split_and_extract_charset(
     target_font_path: str,
     dataset_config: LDMDatasetConfig,
     device: torch.device,
@@ -83,7 +83,7 @@ def main() -> None:
         )
         device = select_device(args.device)
 
-        extract_train_val_charset(
+        split_and_extract_charset(
             target_font_path=args.target_font_path,
             dataset_config=dataset_config,
             device=device,
