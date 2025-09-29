@@ -6,7 +6,6 @@ IMG_WIDTH=512
 IMG_HEIGHT=512
 SAMPLE_RATIO=1.0
 
-
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 SOURCE_CHARSET_PATH="charsets/unihan_coverage/${TARGET_FONT_NAME}/covered.txt"
 

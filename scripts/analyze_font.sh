@@ -3,7 +3,6 @@
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 REFERENCE_FONTS_DIR="fonts/jigmo/"
 
-
 python analyze_font.py \
     --target_font_path "$TARGET_FONT_PATH" \
     --reference_fonts_dir "$REFERENCE_FONTS_DIR" \
@@ -15,4 +14,4 @@ if [ $? -eq 0 ]; then
 else
     echo "❌ Font analysis failed!"
     exit 1
-fiㄇ
+fi

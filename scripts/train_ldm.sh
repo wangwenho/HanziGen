@@ -12,9 +12,8 @@ IMG_SAVE_INTERVAL=5
 LPIPS_EVAL_INTERVAL=10
 EVAL_BATCH_SIZE=2
 DEVICE="cuda:1"
-RESUME=true
+RESUME=false
 USE_AMP=false
-
 
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 PRETRAINED_VQVAE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
