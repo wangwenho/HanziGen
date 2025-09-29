@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# ==================== USER CONFIGURATIONS ====================
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 TRAIN_SPLIT_RATIO=0.8
 VAL_SPLIT_RATIO=0.2
@@ -12,6 +13,7 @@ DEVICE="cuda:1"
 RESUME=false
 USE_AMP=false
 
+# ==================== DO NOT MODIFY BELOW ====================
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
 MODEL_SAVE_PATH="checkpoints/vqvae_${TARGET_FONT_NAME}.pth"
 TENSORBOARD_LOG_DIR="runs/VQVAE_${TARGET_FONT_NAME}"

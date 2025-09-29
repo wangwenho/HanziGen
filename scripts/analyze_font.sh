@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# ==================== USER CONFIGURATIONS ====================
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
 REFERENCE_FONTS_DIR="fonts/jigmo/"
 
+# ==================== DO NOT MODIFY BELOW ====================
 python analyze_font.py \
     --target_font_path "$TARGET_FONT_PATH" \
     --reference_fonts_dir "$REFERENCE_FONTS_DIR" \

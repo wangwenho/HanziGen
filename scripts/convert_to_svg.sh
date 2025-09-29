@@ -1,15 +1,27 @@
 #!/bin/bash
 
+# ==================== USER CONFIGURATIONS ====================
 TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
-TIMESTAMP="20250929_090512"
+TIMESTAMP="auto"
 BLACKLEVEL=0.5
 TURDSIZE=2
 ALPHAMAX=1.0
 OPTTOLERANCE=0.2
 
+# ==================== DO NOT MODIFY BELOW ====================
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
-INPUT_DIR="samples_${TARGET_FONT_NAME}/ldm_inference_${TIMESTAMP}/infer/gen/"
-OUTPUT_DIR="samples_${TARGET_FONT_NAME}/ldm_inference_${TIMESTAMP}/svg/"
+SAMPLE_ROOT="samples_${TARGET_FONT_NAME}/"
+
+if [ "$TIMESTAMP" = "auto" ]; then
+    LATEST_INFERENCE_DIR=$(find "${SAMPLE_ROOT}" -maxdepth 1 -name "ldm_inference_*" -type d | sort -r | head -n 1)
+    TIMESTAMP=$(basename "$LATEST_INFERENCE_DIR" | sed 's/ldm_inference_//')
+    echo "🤖 Auto-detected timestamp: $TIMESTAMP"
+else
+    echo "📝 Using manual timestamp: $TIMESTAMP"
+fi
+
+INPUT_DIR="${SAMPLE_ROOT}ldm_inference_${TIMESTAMP}/infer/gen/"
+OUTPUT_DIR="${SAMPLE_ROOT}ldm_inference_${TIMESTAMP}/svg/"
 
 python convert_to_svg.py \
     --input_dir "$INPUT_DIR" \
