@@ -6,5 +6,5 @@ matplotlib==3.10.1
 potracer==0.0.4
 rich==14.0.0
 scikit-image==0.25.2
-tensorboard==2.19.0
+tensorboard==2.20.0
 tqdm==4.67.1
