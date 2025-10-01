@@ -1,4 +1,4 @@
-clean-fid==0.1.10
+clean-fid==0.1.25
 einops==0.8.1
 fonttools==4.57.0
 lpips==0.1.4

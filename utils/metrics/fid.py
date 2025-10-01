@@ -25,6 +25,7 @@ def compute_fid_score(
     score = fid.compute_fid(
         fdir1=gen_img_dir,
         fdir2=gt_img_dir,
+        num_workers=0,
         batch_size=batch_size,
         device=device,
     )
