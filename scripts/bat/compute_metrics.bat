@@ -13,22 +13,23 @@ for %%f in ("%TARGET_FONT_PATH%") do (
 )
 set "SAMPLE_ROOT=samples_!FILENAME!/"
 
-if "%TIMESTAMP%"=="auto" (
+if "!TIMESTAMP!" == "auto" (
     set "LATEST_LDM_DIR="
-    for /f "delims=" %%d in ('dir "%SAMPLE_ROOT%ldm_training_*" /b /ad /o-d 2^>nul') do (
-        if not defined LATEST_LDM_DIR (
+    set "LATEST_TIME=0"
+    
+    for /d %%d in ("!SAMPLE_ROOT!ldm_training_*") do (
+        set "DIR_NAME=%%~nd"
+        set "CURRENT_TIMESTAMP=!DIR_NAME:ldm_training_=!"
+        if "!CURRENT_TIMESTAMP!" gtr "!LATEST_TIME!" (
+            set "LATEST_TIME=!CURRENT_TIMESTAMP!"
             set "LATEST_LDM_DIR=%%d"
         )
     )
-    if defined LATEST_LDM_DIR (
-        set "TIMESTAMP=!LATEST_LDM_DIR:ldm_training_=!"
-        echo 🤖 Auto-detected timestamp: !TIMESTAMP!
-    ) else (
-        echo ❌ No training directories found
-        exit /b 1
-    )
+    
+    set "TIMESTAMP=!LATEST_TIME!"
+    echo 🤖 Auto-detected timestamp: !TIMESTAMP!
 ) else (
-    echo 📝 Using manual timestamp: %TIMESTAMP%
+    echo 📝 Using manual timestamp: !TIMESTAMP!
 )
 
 set "GENERATED_IMG_DIR=%SAMPLE_ROOT%ldm_training_!TIMESTAMP!/eval/gen/"

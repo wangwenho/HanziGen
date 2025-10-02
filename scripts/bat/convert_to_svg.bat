@@ -15,22 +15,23 @@ for %%f in ("%TARGET_FONT_PATH%") do (
 )
 set "SAMPLE_ROOT=samples_!FILENAME!/"
 
-if "%TIMESTAMP%"=="auto" (
+if "!TIMESTAMP!" == "auto" (
     set "LATEST_INFERENCE_DIR="
-    for /f "delims=" %%d in ('dir "%SAMPLE_ROOT%ldm_inference_*" /b /ad /o-d 2^>nul') do (
-        if not defined LATEST_INFERENCE_DIR (
+    set "LATEST_TIME=0"
+    
+    for /d %%d in ("!SAMPLE_ROOT!ldm_inference_*") do (
+        set "DIR_NAME=%%~nd"
+        set "CURRENT_TIMESTAMP=!DIR_NAME:ldm_inference_=!"
+        if "!CURRENT_TIMESTAMP!" gtr "!LATEST_TIME!" (
+            set "LATEST_TIME=!CURRENT_TIMESTAMP!"
             set "LATEST_INFERENCE_DIR=%%d"
         )
     )
-    if defined LATEST_INFERENCE_DIR (
-        set "TIMESTAMP=!LATEST_INFERENCE_DIR:ldm_inference_=!"
-        echo 🤖 Auto-detected timestamp: !TIMESTAMP!
-    ) else (
-        echo ❌ No inference directories found
-        exit /b 1
-    )
+    
+    set "TIMESTAMP=!LATEST_TIME!"
+    echo 🤖 Auto-detected timestamp: !TIMESTAMP!
 ) else (
-    echo 📝 Using manual timestamp: %TIMESTAMP%
+    echo 📝 Using manual timestamp: !TIMESTAMP!
 )
 
 set "INPUT_DIR=%SAMPLE_ROOT%ldm_inference_!TIMESTAMP!/infer/gen/"
