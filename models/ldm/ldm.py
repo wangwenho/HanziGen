@@ -21,7 +21,7 @@ from datasets.image_dataset import PairedGlyphImageDataset
 from datasets.loader import Loader
 from models.unet.unet import UNet
 from models.vqvae.vqvae import VQVAE
-from utils.font.font_utils import read_charset_from_file
+from utils.charset.charset_utils import read_charset_from_file
 from utils.hardware.hardware_utils import select_device
 from utils.image.image_generator import GlyphImageGenerator
 from utils.image.image_utils import convert_tensor_to_pil_images, save_images
