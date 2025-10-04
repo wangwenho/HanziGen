@@ -51,7 +51,6 @@ def compute_all_metrics(
         batch_size=eval_batch_size,
         device=device,
     )
-    print("Metrics computed successfully!")
 
     scores = {
         "psnr": psnr_score,

@@ -28,8 +28,8 @@ python compute_metrics.py \
     --device "$DEVICE"
 
 if [ $? -eq 0 ]; then
-    echo "✅ Metric computation completed successfully!"
+    echo "✅ Metrics computation completed successfully!"
 else
-    echo "❌ Metric computation failed!"
+    echo "❌ Metrics computation failed!"
     exit 1
 fi
