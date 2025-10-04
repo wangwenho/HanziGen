@@ -17,7 +17,7 @@
 ![workflow](assets/workflow.png)
 
 ### 方法概述
-系統採用 **潛在擴散模型（Latent Diffusion Model, LDM）** 作為圖像生成核心。透過兩階段的訓練策略，模型能有效降低運算成本，並學習目標字型的風格特徵，進而利用參考字型作為結構引導，生成缺失的字形圖像。
+本專案採用 **潛在擴散模型（Latent Diffusion Model, LDM）** 作為圖像生成核心。透過兩階段的訓練策略，模型能有效降低運算成本，並學習目標字型的風格特徵，進而利用參考字型作為結構引導，生成缺失的字形圖像。
 
 ![mini_model](assets/mini_model.png)
 
@@ -49,7 +49,7 @@
 
 ## ✨ 生成樣本
 
-下圖展示了「字生字」在其他多種目標字型上的生成效果。第一排為參考字形圖像；第二排為「字生字」生成的字形圖像；第三排為實際應有的目標字形圖像（未收錄者以虛線叉號標示）。
+下圖展示了「字生字」在其他多種目標字型上的生成效果。第一排為參考字形圖像；第二排為模型生成的字形圖像；第三排為實際應有的目標字形圖像（未收錄者以虛線叉號標示）。
 
 ![samples](assets/samples.png)
 
@@ -65,9 +65,6 @@
 > - **作業系統**：Linux、Windows（建議使用 WSL2）。
 > - **硬體需求**：至少 4GB VRAM 的 NVIDIA 顯示卡。
 > - **驅動程式**：相容於 CUDA 11.8 或以上版本的 NVIDIA 驅動程式。
-
-> [!NOTE]
-> - 本專案亦提供了 Windows `.bat` 腳本，但建議使用 [WSL2](https://learn.microsoft.com/zh-tw/windows/wsl/install)  以獲得更佳的相容性與效能。
 
 #### 1-1 下載本專案
 ```bash
@@ -158,18 +155,18 @@ fonts/
 </details>
 
 #### 3-2 執行腳本
-- 在終端機執行以下指令：
+> [!IMPORTANT]
+> - 請依照您的系統環境選擇對應的腳本執行。
+> - Windows 使用者建議使用 WSL2。
 
+- **Linux/WSL2 環境（Bash）**
 ```bash
 bash scripts/sh/analyze_font.sh
 ```
-
-> [!NOTE]
-> - Windows 使用者可直接執行本專案提供的 `.bat` 腳本。若使用 WSL2，則可參考上述 Linux 指令。
-> - 後續說明將以 Linux 指令為主，Windows 使用者請至 `scripts/bat/` 目錄中找到對應的 `.bat` 腳本並在終端機執行對應指令：
-> ```cmd
-> scripts\bat\analyze_font.bat
-> ```
+- **Windows 原生環境（PowerShell）**
+```bat
+scripts\bat\analyze_font.bat
+```
 
 #### 3-3 查看輸出
 - 覆蓋率統計：目標字型與參考字型對 `jf7000` 和 `Unihan` 各子字集的覆蓋率將顯示於終端機。
@@ -282,11 +279,14 @@ charsets/
 > [!TIP]
 > - 可調整 `SAMPLE_RATIO` 參數，以實驗不同的字形圖像資料集大小。
 
-#### 4-2 執行腳本
-- 在終端機執行以下指令：
-
+#### **4-2 執行腳本**
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/prepare_dataset.sh
+```
+- **Windows 原生環境**
+```bat
+scripts\bat\prepare_dataset.bat
 ```
 
 #### 4-3 查看輸出
@@ -344,10 +344,13 @@ data/
 > - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
 
 #### 5-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/split_dataset.sh
+```
+- **Windows 原生環境**
+```bat
+scripts\bat\split_dataset.bat
 ```
 
 #### 5-3 查看輸出
@@ -411,13 +414,17 @@ charsets/
 > - 如需進一步自訂 VQ-VAE 架構，請參考 [`configs/vqvae_config.py`](configs/vqvae_config.py) 中的 `VQVAEModelConfig` 類別。
 
 #### 6-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/train_vqvae.sh
 ```
+- **Windows 原生環境**
+```bat
+scripts\bat\train_vqvae.bat
+```
+
 > [!TIP]
-> 訓練過程中，可透過 `tensorboard --logdir=runs/VQVAE_[target_font]` 查看訓練狀態。
+> - 訓練過程中，可透過 `tensorboard --logdir=runs/VQVAE_[target_font]` 查看訓練狀態。
 
 #### 6-3 查看輸出
 - 訓練狀態：VQ-VAE 各週期的訓練狀態與損失將顯示於終端機。
@@ -541,13 +548,17 @@ samples_[target_font]/
 > - 如需進一步自訂 LDM 架構，請參考 [`configs/ldm_config.py`](configs/ldm_config.py) 中的 `LDMModelConfig` 類別。
 
 #### 7-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/train_ldm.sh
 ```
+- **Windows 原生環境**
+```bat
+scripts\bat\train_ldm.bat
+```
+
 > [!TIP]
-> 訓練過程中，可透過 `tensorboard --logdir=runs/LDM_[target_font]` 查看訓練狀態。
+> - 訓練過程中，可透過 `tensorboard --logdir=runs/LDM_[target_font]` 查看訓練狀態。
 
 #### 7-3 查看輸出
 - 訓練狀態：LDM 各週期的訓練狀態與損失將顯示於終端機。
@@ -645,10 +656,13 @@ samples_[target_font]/
 > - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
 
 #### 8-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/compute_metrics.sh
+```
+- **Windows 原生環境**
+```bat
+scripts\bat\compute_metrics.bat
 ```
 
 #### 8-3 查看輸出
@@ -680,10 +694,10 @@ bash scripts/sh/compute_metrics.sh
 ### 9. 生成字形圖像 🖼️
 此步驟將利用訓練完成的 LDM 模型生成目標字形圖像。
 
-1. **設定參數：**
-   1. 開啟 [`scripts/sh/inference.sh`](scripts/sh/inference.sh)。
-   2. 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-   3. 調整其他參數（可選）。
+#### 9-1 設定參數
+- 開啟 [`scripts/sh/inference.sh`](scripts/sh/inference.sh)。
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
+- 調整其他參數（可選）。
 
 <details>
 <summary>📋 查看腳本參數</summary>
@@ -732,10 +746,13 @@ charsets/
 </details>
 
 #### 9-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/inference.sh
+```
+- **Windows 原生環境**
+```bat
+scripts\bat\inference.bat
 ```
 
 #### 9-3 查看輸出
@@ -797,10 +814,13 @@ samples_[your_target_font]/
 > - 可調整 `BLACKLEVEL`、`TURDSIZE`、`ALPHAMAX` 與 `OPTTOLERANCE` 參數，以實驗不同的向量化效果。
 
 #### 10-2 執行腳本
-- 在終端機執行以下指令：
-
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/convert_to_svg.sh
+```
+- **Windows 原生環境**
+```bat
+scripts\bat\convert_to_svg.bat
 ```
 
 #### 10-3 查看輸出
@@ -840,22 +860,22 @@ samples_[your_target_font]/
 ## 📚 參考資料
 
 ### 學術論文
-- Ronneberger et al. (2015)。[*U-Net: Convolutional Networks for Biomedical Image Segmentation*](https://arxiv.org/abs/1505.04597)，arXiv:1505.04597。
-- Oord et al. (2017)。[*Neural Discrete Representation Learning*](https://arxiv.org/abs/1711.00937)，arXiv:1711.00937。
-- Ho et al. (2020)。[*Denoising Diffusion Probabilistic Models*](https://arxiv.org/abs/2006.11239)，arXiv:2006.11239。
-- Song et al. (2020)。[*Denoising Diffusion Implicit Models*](https://arxiv.org/abs/2010.02502)，arXiv:2010.02502。
-- Rombach et al. (2021)。[*High-Resolution Image Synthesis with Latent Diffusion Models*](https://arxiv.org/abs/2112.10752)，arXiv:2112.10752。
+- Ronneberger et al.（2015）。[U-Net: Convolutional Networks for Biomedical Image Segmentation](https://arxiv.org/abs/1505.04597)，arXiv:1505.04597。
+- Oord et al.（2017）。[Neural Discrete Representation Learning](https://arxiv.org/abs/1711.00937)，arXiv:1711.00937。
+- Ho et al.（2020）。[Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)，arXiv:2006.11239。
+- Song et al.（2020）。[Denoising Diffusion Implicit Models](https://arxiv.org/abs/2010.02502)，arXiv:2010.02502。
+- Rombach et al.（2021）。[High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752)，arXiv:2112.10752。
 
 ### 網路文章
-- 蘇煒翔。(2014)。[關於「南去經三國，東來過五湖」](https://blog.justfont.com/2014/12/jfbook-example/)。justfont Blog。
-- 蘇煒翔。(2015)。[字型下載之前，先看看字型是怎麼製作的](https://blog.justfont.com/2015/07/check-this-out-b4-downloading-fonts/)。justfont Blog。
-- Ruby。(2018)。[字型版權通識課：保護方式與產業現況](https://blog.justfont.com/2018/10/copyright-course-1/)。justfont Blog。
-- 蘇煒翔。(2019)。[有種志業，叫做字型設計](https://blog.justfont.com/2019/01/typedesigners-talk/)。justfont Blog。
-- 姜呈穎。(2023)。[下載字型前先看｜為什麼會缺字？](https://blog.justfont.com/2023/06/charactersets)。justfont Blog。
+- 蘇煒翔。（2014）。[關於「南去經三國，東來過五湖」](https://blog.justfont.com/2014/12/jfbook-example/)。justfont Blog。
+- 蘇煒翔。（2015）。[字型下載之前，先看看字型是怎麼製作的](https://blog.justfont.com/2015/07/check-this-out-b4-downloading-fonts/)。justfont Blog。
+- Ruby。（2018）。[字型版權通識課：保護方式與產業現況](https://blog.justfont.com/2018/10/copyright-course-1/)。justfont Blog。
+- 蘇煒翔。（2019）。[有種志業，叫做字型設計](https://blog.justfont.com/2019/01/typedesigners-talk/)。justfont Blog。
+- 姜呈穎。（2023）。[下載字型前先看｜為什麼會缺字？](https://blog.justfont.com/2023/06/charactersets)。justfont Blog。
 
 ### 相關書目
-- Graphic 社編輯部、卵形｜葉忠宜（統籌．設計）。(2016–2020)。Typography 字誌 系列 (Issue 01–06)。臉譜出版。
-- 柯志杰、蘇煒翔。(2019)。字型散步 Next：從台灣日常出發，無所不在的中文字型學。臉譜出版。
+- Graphic 社編輯部、卵形｜葉忠宜（統籌．設計）。（2016–2020）。Typography 字誌 系列（Issue 01–06）。臉譜出版。
+- 柯志杰、蘇煒翔。（2019）。字型散步 Next：從台灣日常出發，無所不在的中文字型學。臉譜出版。
 
 ### 資源網站
 - [justfont](https://justfont.com/)：台灣的字型設計與教育推廣品牌。
@@ -869,8 +889,8 @@ samples_[your_target_font]/
 
 本專案得以完成，仰賴眾多開源社群與創作者無私貢獻的字型資源與工具，特此致謝：
 
-### 使用字型
-- [jigmo](https://kamichikoichi.github.io/jigmo/)：參考字型。
+### 字型資源
+- [Jigmo](https://kamichikoichi.github.io/jigmo/)：參考字型。
 - [851ゴチカクット](https://pm85122.onamae.jp/851Gkktt.html)：目標字型範例一。
 - [851テガキカクット](https://pm85122.onamae.jp/851H_kktt.html)：目標字型範例二。
 - [851チカラヅヨク](https://pm85122.onamae.jp/851ch-dz.html)：目標字型範例三。
