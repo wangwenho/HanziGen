@@ -27,9 +27,9 @@
 - **高品質輸出**：支援生成解析度達 512 × 512 像素以上的清晰字形圖像。
 
 > [!IMPORTANT]
-> - 本專案非通用模型，每種目標字型都必須獨立完成訓練流程。
-> - 本專案不含任何字型檔案，請自行準備目標字型與參考字型。
-> - 本專案不提供預訓練模型，請依照使用說明並自行訓練模型。
+> - 本專案非通用模型，每種目標字型都必須獨立完成訓練流程
+> - 本專案不含任何字型檔案，請自行準備目標字型與參考字型
+> - 本專案不提供預訓練模型，請依照使用說明並自行訓練模型
 
 ---
 
@@ -62,9 +62,9 @@
 此步驟將建立本專案所需的 Python 環境並安裝相關套件。
 
 > [!IMPORTANT]
-> - **作業系統**：Linux、Windows（建議使用 WSL2）。
-> - **硬體需求**：至少 4GB VRAM 的 NVIDIA 顯示卡。
-> - **驅動程式**：相容於 CUDA 11.8 或以上版本的 NVIDIA 驅動程式。
+> - **作業系統**：Linux、Windows（建議使用 WSL2）
+> - **硬體需求**：至少 4GB VRAM 的 NVIDIA 顯示卡
+> - **驅動程式**：相容於 CUDA 11.8 或以上版本的 NVIDIA 驅動程式
 
 #### 1-1 下載本專案
 ```bash
@@ -74,7 +74,7 @@ cd HanziGen
 
 #### 1-2 建立 Conda 環境
 > [!NOTE]
-> - 若尚未安裝 Anaconda，請參考 [Anaconda 官方網站](https://www.anaconda.com/download/success) 安裝對應的平台版本。
+> - 若尚未安裝 Anaconda，請參考 [Anaconda 官方網站](https://www.anaconda.com/download/success) 安裝對應的平台版本
 
 ```bash
 conda create -n hanzigen python=3.13 -y
@@ -86,7 +86,7 @@ conda activate hanzigen
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu118
 ```
 > [!NOTE]
-> - 若需安裝其他版本的 PyTorch，請參考 [PyTorch 官方網站](https://pytorch.org/get-started/previous-versions/) 取得對應的安裝指令。
+> - 若需安裝其他版本的 PyTorch，請參考 [PyTorch 官方網站](https://pytorch.org/get-started/previous-versions/) 取得對應的安裝指令
 
 #### 1-4 安裝其餘套件
 ```bash
@@ -100,23 +100,23 @@ pip install -r requirements.txt
 此步驟將準備專案所需的目標字型與參考字型檔案。
 
 #### 2-1 建立資料夾
-   - 在專案根目錄建立 `fonts/` 資料夾。
+   - 在專案根目錄建立 `fonts/` 資料夾
 
 #### 2-2 放置目標字型
-   - 選擇一款欲補全的目標字型（`.ttf` 或 `.otf` 格式）。
-   - 將目標字型檔案放入 `fonts/` 資料夾。
+   - 選擇一款欲補全的目標字型（`.ttf` 或 `.otf` 格式）
+   - 將目標字型檔案放入 `fonts/` 資料夾
 
 #### 2-3 放置參考字型
-   - 前往 [Jigmo 官方網站](https://kamichikoichi.github.io/jigmo/) 下載 Jigmo 字型作為參考字型。
-   - 在 `fonts/` 資料夾內建立 `jigmo/` 子資料夾。
-   - 將下載的 `jigmo.ttf`、`jigmo2.ttf`、`jigmo3.ttf` 檔案放入 `fonts/jigmo/` 資料夾。
+   - 前往 [Jigmo 官方網站](https://kamichikoichi.github.io/jigmo/) 下載 Jigmo 字型作為參考字型
+   - 在 `fonts/` 資料夾內建立 `jigmo/` 子資料夾
+   - 將下載的 `jigmo.ttf`、`jigmo2.ttf`、`jigmo3.ttf` 檔案放入 `fonts/jigmo/` 資料夾
 
 > [!CAUTION]
-> - 請確認目標字型的授權條款允許修改再發布。
-> - 請確保目標字型的檔名不含空格或特殊字元。
+> - 請確認目標字型的授權條款允許修改再發布
+> - 請確保目標字型的檔名不含空格或特殊字元
 
 > [!TIP]
-> - 建議選用至少包含 2000 個漢字的目標字型，以獲得更好的補全效果。
+> - 建議選用至少包含 2000 個漢字的目標字型，以獲得更好的補全效果
 
 <details>
 <summary>📁 查看檔案結構</summary>
@@ -142,22 +142,22 @@ fonts/
 此步驟將分析目標字型與參考字型在 [jf7000](https://justfont.com/jf7000) 與 [Unihan](https://www.unicode.org/charts/unihan.html) 字集中的漢字覆蓋情況，並產生對應的覆蓋與缺失字集。
 
 #### 3-1 設定參數
-- 開啟 [`scripts/sh/analyze_font.sh`](scripts/sh/analyze_font.sh)。
-- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-- 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/analyze_font.sh`](scripts/sh/analyze_font.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/analyze_font.bat`](scripts/bat/analyze_font.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）
 
 </details>
 
 #### 3-2 執行腳本
 > [!IMPORTANT]
-> - 請依照您的系統環境選擇對應的腳本執行。
-> - Windows 使用者建議使用 WSL2。
+> - 請依照您的系統環境選擇對應的腳本執行
 
 - **Linux/WSL2 環境（Bash）**
 ```bash
@@ -258,28 +258,29 @@ charsets/
 此步驟將產生目標字型與參考字型的字形圖像，作為後續模型訓練所需的資料集。
 
 #### 4-1 設定參數
-  - 開啟 [`scripts/sh/prepare_dataset.sh`](scripts/sh/prepare_dataset.sh)。
-  - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：``"fonts/target_font.ttf"``）。
-  - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/prepare_dataset.sh`](scripts/sh/prepare_dataset.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/prepare_dataset.bat`](scripts/bat/prepare_dataset.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）。
-- `IMG_WIDTH`：字形圖像寬度（整數）。
-- `IMG_HEIGHT`：字形圖像高度（整數）。
-- `SAMPLE_RATIO`：抽樣比例（浮點數，範圍 0.0～1.0）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）
+- `IMG_WIDTH`：字形圖像寬度（整數）
+- `IMG_HEIGHT`：字形圖像高度（整數）
+- `SAMPLE_RATIO`：抽樣比例（浮點數，範圍 0.0～1.0）
 
 </details>
 
 > [!WARNING]
-> - 請確保 `IMG_WIDTH` 與 `IMG_HEIGHT` 參數設定值相同。
+> - 請確保 `IMG_WIDTH` 與 `IMG_HEIGHT` 參數設定值相同
 
 > [!TIP]
-> - 可調整 `SAMPLE_RATIO` 參數，以實驗不同的字形圖像資料集大小。
+> - 可調整 `SAMPLE_RATIO` 參數，以實驗不同的字形圖像資料集大小
 
-#### **4-2 執行腳本**
+#### 4-2 執行腳本
 - **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/prepare_dataset.sh
@@ -291,6 +292,7 @@ scripts\bat\prepare_dataset.bat
 
 #### 4-3 查看輸出
 - 檔案輸出：目標字形（`target`）與參考字形（`reference`）圖像將儲存在 `data/` 資料夾中。
+
 <details>
 <summary>📁 查看檔案結構</summary>
 
@@ -321,27 +323,28 @@ data/
 此步驟將劃分訓練字集與驗證字集。
 
 #### 5-1 設定參數
-   - 開啟 [`scripts/sh/split_dataset.sh`](scripts/sh/split_dataset.sh)。
-   - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-   - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/split_dataset.sh`](scripts/sh/split_dataset.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/split_dataset.bat`](scripts/bat/split_dataset.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）。
-- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）。
-- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）。
-- `DEVICE`：指定運算設備（字串）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）
+- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）
+- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）
+- `DEVICE`：指定運算設備（字串）
 
 </details>
 
 > [!WARNING]
-> - 請確保 `TRAIN_SPLIT_RATIO` 與 `VAL_SPLIT_RATIO` 之和等於 1.0。 
+> - 請確保 `TRAIN_SPLIT_RATIO` 與 `VAL_SPLIT_RATIO` 之和等於 1.0
 
 > [!TIP]
-> - 可調整 `TRAIN_SPLIT_RATIO` 、 `VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數，以實驗不同的字集劃分。
-> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
+> - 可調整 `TRAIN_SPLIT_RATIO`、`VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數，以實驗不同的字集劃分
+> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）
 
 #### 5-2 執行腳本
 - **Linux/WSL2 環境**
@@ -354,7 +357,7 @@ scripts\bat\split_dataset.bat
 ```
 
 #### 5-3 查看輸出
-- 檔案輸出： 劃分好的訓練字集（`train.txt`）與驗證字集（`val.txt`）檔案將儲存在 `charsets/` 資料夾中。
+- 檔案輸出：劃分好的訓練字集（`train.txt`）與驗證字集（`val.txt`）檔案將儲存在 `charsets/` 資料夾中。
 <details>
 <summary>📁 查看檔案結構</summary>
 
@@ -380,38 +383,39 @@ charsets/
 此步驟將訓練 VQ-VAE 模型，作為字形圖像的編碼與解碼模組。
 
 #### 6-1 設定參數
-   - 開啟 [`scripts/sh/train_vqvae.sh`](scripts/sh/train_vqvae.sh)。
-   - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-   - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_vqvae.sh`](scripts/sh/train_vqvae.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/train_vqvae.bat`](scripts/bat/train_vqvae.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）。
-- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）。
-- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）。
-- `BATCH_SIZE`：訓練批次大小（整數）。
-- `LEARNING_RATE`：學習率（浮點數）。
-- `NUM_EPOCHS`：訓練週期數（整數）。
-- `IMG_SAVE_INTERVAL`：生成樣本儲存週期間隔（整數）。
-- `DEVICE`：指定運算設備（字串）。
-- `RESUME`：是否從檢查點接續訓練（布林值：`true`/`false`）。
-- `USE_AMP`：是否使用混合精度訓練（布林值：`true`/`false`）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）
+- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）
+- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）
+- `BATCH_SIZE`：訓練批次大小（整數）
+- `LEARNING_RATE`：學習率（浮點數）
+- `NUM_EPOCHS`：訓練週期數（整數）
+- `IMG_SAVE_INTERVAL`：生成樣本儲存週期間隔（整數）
+- `DEVICE`：指定運算設備（字串）
+- `RESUME`：是否從檢查點接續訓練（布林值：`true`/`false`）
+- `USE_AMP`：是否使用混合精度訓練（布林值：`true`/`false`）
 
 </details>
 
 > [!WARNING]
-> - 請確保 `TRAIN_SPLIT_RATIO` 、 `VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數與 5. 一致。
+> - 請確保 `TRAIN_SPLIT_RATIO` 、 `VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數與步驟 5 一致
 
 > [!TIP]
-> - 可調整 `BATCH_SIZE`、`LEARNING_RATE` 與 `NUM_EPOCHS` 參數，以實驗不同的訓練設定。
-> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
-> - 若您使用 RTX 20 系列或更高階顯卡，強烈建議開啟 `USE_AMP` 參數。
-> - 開啟 `RESUME` 參數，可從先前的檢查點（checkpoint）恢復訓練進度。
+> - 可調整 `BATCH_SIZE`、`LEARNING_RATE` 與 `NUM_EPOCHS` 參數，以實驗不同的訓練設定
+> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）
+> - 若使用 RTX 20 系列或更高階顯卡，可將 `USE_AMP` 參數設為 `true`
+> - 若要接續先前中斷的訓練，可將 `RESUME` 參數設為 `true`
 
 > [!NOTE]
-> - 如需進一步自訂 VQ-VAE 架構，請參考 [`configs/vqvae_config.py`](configs/vqvae_config.py) 中的 `VQVAEModelConfig` 類別。
+> - 如需進一步自訂 VQ-VAE 架構，請參考 [`configs/vqvae_config.py`](configs/vqvae_config.py) 中的 `VQVAEModelConfig` 類別
 
 #### 6-2 執行腳本
 - **Linux/WSL2 環境**
@@ -424,7 +428,7 @@ scripts\bat\train_vqvae.bat
 ```
 
 > [!TIP]
-> - 訓練過程中，可透過 `tensorboard --logdir=runs/VQVAE_[target_font]` 查看訓練狀態。
+> - 訓練過程中，可透過 `tensorboard --logdir=runs/VQVAE_[target_font]` 查看訓練狀態
 
 #### 6-3 查看輸出
 - 訓練狀態：VQ-VAE 各週期的訓練狀態與損失將顯示於終端機。
@@ -511,41 +515,42 @@ samples_[target_font]/
 此步驟將訓練 LDM，作為最終的字形生成模型。
 
 #### 7-1 設定參數
-  - 開啟 [`scripts/sh/train_ldm.sh`](scripts/sh/train_ldm.sh)。
-  - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-  - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_ldm.sh`](scripts/sh/train_ldm.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/train_ldm.bat`](scripts/bat/train_ldm.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）。
-- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）。
-- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）。
-- `BATCH_SIZE`：訓練批次大小（整數）。
-- `LEARNING_RATE`：學習率（浮點數）。
-- `NUM_EPOCHS`：訓練週期數（整數）。
-- `SAMPLE_STEPS`：生成樣本去噪步驟數（整數）。
-- `IMG_SAVE_INTERVAL`：生成樣本儲存週期間隔（整數）。
-- `LPIPS_EVAL_INTERVAL`：LPIPS 評估週期間隔（整數）。
-- `EVAL_BATCH_SIZE`：評估批次大小（整數）。
-- `DEVICE`：指定運算設備（字串）。
-- `RESUME`：是否從檢查點接續訓練（布林值：`true`/`false`）。
-- `USE_AMP`：是否使用混合精度訓練（布林值：`true`/`false`）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `TRAIN_SPLIT_RATIO`：訓練字集比例（浮點數，範圍 0.0～1.0）
+- `VAL_SPLIT_RATIO`：驗證字集比例（浮點數，範圍 0.0～1.0）
+- `SPLIT_RANDOM_SEED`：劃分隨機種子（整數）
+- `BATCH_SIZE`：訓練批次大小（整數）
+- `LEARNING_RATE`：學習率（浮點數）
+- `NUM_EPOCHS`：訓練週期數（整數）
+- `SAMPLE_STEPS`：生成樣本去噪步驟數（整數）
+- `IMG_SAVE_INTERVAL`：生成樣本儲存週期間隔（整數）
+- `LPIPS_EVAL_INTERVAL`：LPIPS 評估週期間隔（整數）
+- `EVAL_BATCH_SIZE`：評估批次大小（整數）
+- `DEVICE`：指定運算設備（字串）
+- `RESUME`：是否從檢查點接續訓練（布林值：`true`/`false`）
+- `USE_AMP`：是否使用混合精度訓練（布林值：`true`/`false`）
 
 </details>
 
 > [!WARNING]
-> - 請確保 `TRAIN_SPLIT_RATIO` 、 `VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數與 5. 一致。
+> - 請確保 `TRAIN_SPLIT_RATIO`、`VAL_SPLIT_RATIO` 與 `SPLIT_RANDOM_SEED` 參數與步驟 5 一致
 
 > [!TIP]
-> - 可調整 `BATCH_SIZE`、`LEARNING_RATE` 與 `NUM_EPOCHS` 參數，以實驗不同的訓練設定。
-> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
-> - 若您使用 RTX 20 系列或更高階顯卡，強烈建議開啟 `USE_AMP` 參數。
-> - 開啟 `RESUME` 參數，可從先前的檢查點（checkpoint）恢復訓練進度。
+> - 可調整 `BATCH_SIZE`、`LEARNING_RATE` 與 `NUM_EPOCHS` 參數，以實驗不同的訓練設定
+> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）
+> - 若使用 RTX 20 系列或更高階顯卡，可將 `USE_AMP` 參數設為 `true`
+> - 若要接續先前中斷的訓練，可將 `RESUME` 參數設為 `true`
 
 > [!NOTE]
-> - 如需進一步自訂 LDM 架構，請參考 [`configs/ldm_config.py`](configs/ldm_config.py) 中的 `LDMModelConfig` 類別。
+> - 如需進一步自訂 LDM 架構，請參考 [`configs/ldm_config.py`](configs/ldm_config.py) 中的 `LDMModelConfig` 類別
 
 #### 7-2 執行腳本
 - **Linux/WSL2 環境**
@@ -558,7 +563,7 @@ scripts\bat\train_ldm.bat
 ```
 
 > [!TIP]
-> - 訓練過程中，可透過 `tensorboard --logdir=runs/LDM_[target_font]` 查看訓練狀態。
+> - 訓練過程中，可透過 `tensorboard --logdir=runs/LDM_[target_font]` 查看訓練狀態
 
 #### 7-3 查看輸出
 - 訓練狀態：LDM 各週期的訓練狀態與損失將顯示於終端機。
@@ -638,22 +643,23 @@ samples_[target_font]/
 此步驟將計算 PSNR、SSIM、LPIPS 與 FID 等指標，以評估 LDM 生成之驗證集字形圖像的品質。
 
 #### 8-1 設定參數
-  - 開啟 [`scripts/sh/compute_metrics.sh`](scripts/sh/compute_metrics.sh)。
-  - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-  - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/compute_metrics.sh`](scripts/sh/compute_metrics.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/compute_metrics.bat`](scripts/bat/compute_metrics.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `TIMESTAMP`：指定時間戳或使用自動檢測（字串，可設為 `"auto"` 自動檢測最新訓練結果）。
-- `EVAL_BATCH_SIZE`：評估批次大小（整數）。
-- `DEVICE`：指定運算設備（字串）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `TIMESTAMP`：指定時間戳或使用自動檢測（字串，可設為 `"auto"` 自動檢測最新訓練結果）
+- `EVAL_BATCH_SIZE`：評估批次大小（整數）
+- `DEVICE`：指定運算設備（字串）
 
 </details>
 
 > [!TIP]
-> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
+> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）
 
 #### 8-2 執行腳本
 - **Linux/WSL2 環境**
@@ -695,36 +701,37 @@ scripts\bat\compute_metrics.bat
 此步驟將利用訓練完成的 LDM 模型生成目標字形圖像。
 
 #### 9-1 設定參數
-- 開啟 [`scripts/sh/inference.sh`](scripts/sh/inference.sh)。
-- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-- 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/inference.sh`](scripts/sh/inference.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/inference.bat`](scripts/bat/inference.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）。
-- `CHARSET_PATH`：生成字集檔案路徑（字串，可設為 `"auto"` 自動使用缺失字集）。
-- `BATCH_SIZE`：生成批次大小（整數）。
-- `SAMPLE_STEPS`：生成樣本去噪步驟數（整數）。
-- `IMG_WIDTH`：生成圖像寬度（整數）。
-- `IMG_HEIGHT`：生成圖像高度（整數）。
-- `DEVICE`：指定運算設備（字串）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `REFERENCE_FONTS_DIR`：參考字型資料夾路徑（字串）
+- `CHARSET_PATH`：生成字集檔案路徑（字串，可設為 `"auto"` 自動使用缺失字集）
+- `BATCH_SIZE`：生成批次大小（整數）
+- `SAMPLE_STEPS`：生成樣本去噪步驟數（整數）
+- `IMG_WIDTH`：生成圖像寬度（整數）
+- `IMG_HEIGHT`：生成圖像高度（整數）
+- `DEVICE`：指定運算設備（字串）
 
 </details>
 
 > [!WARNING]
-> - 請確保 `IMG_WIDTH` 與 `IMG_HEIGHT` 參數與 4. 一致。
+> - 請確保 `IMG_WIDTH` 與 `IMG_HEIGHT` 參數與步驟 4 一致
 
 > [!TIP]
-> - 可調整 `CHARSET_PATH` 參數，以指定要生成的字集。預設為目標字型對 `jf7000` 的缺失字形。
-> - 若要生成對 `Unihan` 的缺失字形，請將 `CHARSET_PATH` 設為 `charsets/unihan_coverage/[target_font]/missing.txt`。
-> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）。
+> - 可調整 `CHARSET_PATH` 參數，以指定要生成的字集。預設為目標字型對 `jf7000` 的缺失字形
+> - 若要生成對 `Unihan` 的缺失字形，請將 `CHARSET_PATH` 設為 `charsets/unihan_coverage/[target_font]/missing.txt`
+> - 可調整 `DEVICE` 參數，以指定運算設備（例如：`"cuda"` 、 `"cuda:0"` 、 `"cuda:1"`）
 
 > [!NOTE]
-> - 可使用 `charsets/test/` 目錄中的範例字集。
-> - 如需自訂字集，請使用每行一個漢字的純文字檔案。
-> - 由於生成具有隨機性，建議可重複執行以取得更理想的結果。
+> - 可使用 `charsets/test/` 目錄中的範例字集
+> - 如需自訂字集，請使用每行一個漢字的純文字檔案
+> - 由於生成具有隨機性，建議可重複執行以取得更理想的結果
 
 <details>
 <summary>📁 查看範例字集</summary>
@@ -739,9 +746,9 @@ charsets/
 └── ...
 ```
 - `ordinals.txt`：序數字集檔案（中文數字、天干地支、十二生肖...）。
-- `periodic_table.txt`：元素週期表字集檔案（氫、氦、鋰...）。
+- `periodic_table.txt`：元素週期表字集檔案（氫、氦、鋰、鈹...）。
 - `qianziwen.txt`：千字文字集檔案（天、地、玄、黃...）。
-- `repeats.txt`：疊字字集檔案（如：一、二、三、亖...）。
+- `repeats.txt`：疊字字集檔案（一、二、三、亖...）。
 
 </details>
 
@@ -794,24 +801,25 @@ samples_[your_target_font]/
 此步驟會將生成的點陣字形圖像轉換為對應的 SVG 向量圖形。
 
 #### 10-1 設定參數
-   - 開啟 [`scripts/sh/convert_to_svg.sh`](scripts/sh/convert_to_svg.sh)。
-   - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）。
-   - 調整其他參數（可選）。
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/convert_to_svg.sh`](scripts/sh/convert_to_svg.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/convert_to_svg.bat`](scripts/bat/convert_to_svg.bat)
+- 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
+- 調整其他參數（可選）
 
 <details>
 <summary>📋 查看腳本參數</summary>
 
-- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）。
-- `TIMESTAMP`：指定時間戳或使用自動檢測（字串，可設為 `"auto"` 自動檢測最新推論結果）。
-- `BLACKLEVEL`：黑色閾值（浮點數，範圍 0.0～1.0）。
-- `TURDSIZE`：雜訊大小（整數）。
-- `ALPHAMAX`：最大 alpha 值（浮點數，範圍 0.0～1.0）。
-- `OPTTOLERANCE`：優化容差（浮點數，範圍 0.0～1.0）。
+- `TARGET_FONT_PATH`：目標字型檔案路徑（字串）
+- `TIMESTAMP`：指定時間戳或使用自動檢測（字串，可設為 `"auto"` 自動檢測最新推論結果）
+- `BLACKLEVEL`：黑色閾值（浮點數，範圍 0.0～1.0）
+- `TURDSIZE`：雜訊大小（整數）
+- `ALPHAMAX`：最大 alpha 值（浮點數，範圍 0.0～1.0）
+- `OPTTOLERANCE`：優化容差（浮點數，範圍 0.0～1.0）
 
 </details>
 
 > [!TIP]
-> - 可調整 `BLACKLEVEL`、`TURDSIZE`、`ALPHAMAX` 與 `OPTTOLERANCE` 參數，以實驗不同的向量化效果。
+> - 可調整 `BLACKLEVEL`、`TURDSIZE`、`ALPHAMAX` 與 `OPTTOLERANCE` 參數，以實驗不同的向量化效果
 
 #### 10-2 執行腳本
 - **Linux/WSL2 環境**
@@ -844,8 +852,8 @@ samples_[your_target_font]/
 </details>
 
 > [!NOTE]
-> - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程。
-> - 產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯工具，進行後續的微調與字型封裝作業。
+> - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程
+> - 產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯工具，進行後續的微調與字型封裝作業
 
 ---
 
@@ -904,8 +912,8 @@ samples_[your_target_font]/
 - [FontForge](https://fontforge.org/)：開源字型編輯器。
 
 > [!NOTE]
-> - 本專案的程式碼採用 Apache License 2.0 授權條款。
-> - 其中所引用的部分資源（如 jf7000 字集）可能受其原始授權條款（如 CC BY-SA 4.0）約束，使用時請遵循其原始規範。
+> - 本專案的程式碼採用 Apache License 2.0 授權條款
+> - 本專案所引用的部分資源（如 jf7000 字集）可能受其原始授權條款（如 CC BY-SA 4.0）約束，使用時請遵循其原始規範
   
 ---
 
