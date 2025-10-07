@@ -1,5 +1,6 @@
 ![HanziGen Logo](assets/logo.png)
 
+
 <div align="center">
 
 # 字生字：漢字字形補全系統
@@ -15,6 +16,9 @@
 「字生字」是一套基於深度學習的漢字字形補全系統，整合字型分析、缺字生成與字形向量化等自動化流程，可協助設計師加速字型開發與補全工作。本系統可應用於字型設計，亦適合作為教學與研究的實作範例。
 
 ![workflow](assets/workflow.png)
+
+> [!NOTE]
+> 最新版本的更新內容請參閱 [GitHub Releases](https://github.com/wangwenho/HanziGen/releases)
 
 ### 方法概述
 本專案採用 **潛在擴散模型（Latent Diffusion Model, LDM）** 作為圖像生成核心。透過兩階段的訓練策略，模型能有效降低運算成本，並學習目標字型的風格特徵，進而利用參考字型作為結構引導，生成缺失的字形圖像。
@@ -62,7 +66,7 @@
 此步驟將建立本專案所需的 Python 環境並安裝相關套件。
 
 > [!IMPORTANT]
-> - **作業系統**：Linux、Windows（建議使用 WSL2）
+> - **作業系統**：Linux、Windows（原生環境或 WSL2）
 > - **硬體需求**：至少 4GB VRAM 的 NVIDIA 顯示卡
 > - **驅動程式**：相容於 CUDA 11.8 或以上版本的 NVIDIA 驅動程式
 
@@ -157,13 +161,13 @@ fonts/
 
 #### 3-2 執行腳本
 > [!IMPORTANT]
-> - 請依照您的系統環境選擇對應的腳本執行
+> - 請根據您的作業系統選擇對應的指令，並於終端機執行
 
-- **Linux/WSL2 環境（Bash）**
+- **Linux/WSL2 環境**
 ```bash
 bash scripts/sh/analyze_font.sh
 ```
-- **Windows 原生環境（PowerShell）**
+- **Windows 原生環境**
 ```bat
 scripts\bat\analyze_font.bat
 ```
@@ -490,22 +494,22 @@ checkpoints/
 samples_[target_font]/
 ├── vqvae_training_[YYYYMMDD_HHMMSS]/
 │   ├── train/
-│   │   ├── epoch_0000_tgt_04E00.png
-│   │   ├── epoch_0000_ref_04E8C.png
+│   │   ├── epoch_0000_ref_04E00.png
+│   │   ├── epoch_0000_tgt_04E8C.png
 │   │   └── ...
 │   └── val/
+│       ├── epoch_0000_ref_04E09.png
 │       ├── epoch_0000_tgt_056DB.png
-│       ├── epoch_0000_ref_04E94.png
 │       └── ...
 └── ...
 ```
 - `vqvae_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的子目錄。
 - `train/`：訓練樣本圖像資料夾。
-  - `epoch_0000_tgt_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左右兩個部分，分別為目標字形與重建字形。
-  - `epoch_0000_ref_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左右兩個部分，分別為參考字形與重建字形。
+  - `epoch_0000_ref_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
+  - `epoch_0000_tgt_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
 - `val/`：驗證樣本圖像資料夾。
-  - `epoch_0000_tgt_056DB.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左右兩個部分，分別為目標字形與重建字形。
-  - `epoch_0000_ref_04E94.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左右兩個部分，分別為參考字形與重建字形。
+  - `epoch_0000_ref_04E09.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
+  - `epoch_0000_tgt_056DB.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
 
 </details>
 
@@ -625,15 +629,15 @@ samples_[target_font]/
 │   │   ├── epoch_0000_04E00.png
 │   │   └── ...
 │   └── val/
-│       ├── epoch_0000_056DB.png
+│       ├── epoch_0000_04E8C.png
 │       └── ...
 └── ...
 ```
 - `ldm_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的子目錄。
 - `train/`：訓練樣本圖像資料夾。
-  - `epoch_0000_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左中右三個部分，分別為參考字形、目標字形與生成字形。
+  - `epoch_0000_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
 - `val/`：驗證樣本圖像資料夾。
-  - `epoch_0000_056DB.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案，圖片分為左中右三個部分，分別為參考字形、目標字形與生成字形。
+  - `epoch_0000_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
 
 </details>
 
@@ -902,7 +906,7 @@ samples_[your_target_font]/
 - [851ゴチカクット](https://pm85122.onamae.jp/851Gkktt.html)：目標字型範例一。
 - [851テガキカクット](https://pm85122.onamae.jp/851H_kktt.html)：目標字型範例二。
 - [851チカラヅヨク](https://pm85122.onamae.jp/851ch-dz.html)：目標字型範例三。
-- [柑仔蜜](https://justfont.com/kamabit/)：用於專案視覺設計之展示用字型。
+- [柑仔蜜](https://justfont.com/kamabit/)：專案主視覺設計字型。
 
 ### 字集資源
 - [jf7000 當務字集](https://justfont.com/jf7000)：jf7000 字集。
