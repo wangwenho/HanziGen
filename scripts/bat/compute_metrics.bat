@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM ==================== USER CONFIGURATIONS ====================
-set "TARGET_FONT_PATH=fonts/851Gkktt_005.ttf"
+set "TARGET_FONT_PATH=fonts/target_font.ttf"
 set "TIMESTAMP=auto"
 set "EVAL_BATCH_SIZE=2"
 set "DEVICE=cuda"

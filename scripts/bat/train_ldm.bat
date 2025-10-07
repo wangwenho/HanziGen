@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM ==================== USER CONFIGURATIONS ====================
-set "TARGET_FONT_PATH=fonts/851Gkktt_005.ttf"
+set "TARGET_FONT_PATH=fonts/target_font.ttf"
 set "TRAIN_SPLIT_RATIO=0.8"
 set "VAL_SPLIT_RATIO=0.2"
 set "SPLIT_RANDOM_SEED=2025"

@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM ==================== USER CONFIGURATIONS ====================
-set "TARGET_FONT_PATH=fonts/851Gkktt_005.ttf"
+set "TARGET_FONT_PATH=fonts/target_font.ttf"
 set "REFERENCE_FONTS_DIR=fonts/jigmo/"
 set "IMG_WIDTH=512"
 set "IMG_HEIGHT=512"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==================== USER CONFIGURATIONS ====================
-TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
+TARGET_FONT_PATH="fonts/target_font.ttf"
 TIMESTAMP="auto"
 BLACKLEVEL=0.5
 TURDSIZE=2

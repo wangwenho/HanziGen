@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # ==================== USER CONFIGURATIONS ====================
-TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
+TARGET_FONT_PATH="fonts/target_font.ttf"
 TRAIN_SPLIT_RATIO=0.8
 VAL_SPLIT_RATIO=0.2
 SPLIT_RANDOM_SEED=2025
-DEVICE="cuda:1"
+DEVICE="cuda"
 
 # ==================== DO NOT MODIFY BELOW ====================
 python split_dataset.py \

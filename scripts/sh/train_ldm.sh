@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==================== USER CONFIGURATIONS ====================
-TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
+TARGET_FONT_PATH="fonts/target_font.ttf"
 TRAIN_SPLIT_RATIO=0.8
 VAL_SPLIT_RATIO=0.2
 SPLIT_RANDOM_SEED=2025
@@ -12,7 +12,7 @@ SAMPLE_STEPS=50
 IMG_SAVE_INTERVAL=5
 LPIPS_EVAL_INTERVAL=10
 EVAL_BATCH_SIZE=2
-DEVICE="cuda:1"
+DEVICE="cuda"
 RESUME=false
 USE_AMP=false
 

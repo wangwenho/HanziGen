@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # ==================== USER CONFIGURATIONS ====================
-TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
+TARGET_FONT_PATH="fonts/target_font.ttf"
 REFERENCE_FONTS_DIR="fonts/jigmo/"
 CHARSET_PATH="auto"
 BATCH_SIZE=16
 SAMPLE_STEPS=50
 IMG_WIDTH=512
 IMG_HEIGHT=512
-DEVICE="cuda:1"
+DEVICE="cuda"
 
 # ==================== DO NOT MODIFY BELOW ====================
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"

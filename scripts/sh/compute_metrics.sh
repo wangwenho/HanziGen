@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # ==================== USER CONFIGURATIONS ====================
-TARGET_FONT_PATH="fonts/851Gkktt_005.ttf"
+TARGET_FONT_PATH="fonts/target_font.ttf"
 TIMESTAMP="auto"
 EVAL_BATCH_SIZE=2
-DEVICE="cuda:1"
+DEVICE="cuda"
 
 # ==================== DO NOT MODIFY BELOW ====================
 TARGET_FONT_NAME="$(basename "$TARGET_FONT_PATH" | sed -E 's/\.(ttf|otf)$//')"
