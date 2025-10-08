@@ -18,7 +18,7 @@
 ![workflow](assets/workflow.png)
 
 > [!NOTE]
-> 最新版本的更新內容請參閱 [GitHub Releases](https://github.com/wangwenho/HanziGen/releases)
+> 各版本的更新內容請參閱 [GitHub Releases](https://github.com/wangwenho/HanziGen/releases) 或 [更新日誌](CHANGELOG.md)
 
 ### 方法概述
 本專案採用 **潛在擴散模型（Latent Diffusion Model, LDM）** 作為圖像生成核心。透過兩階段的訓練策略，模型能有效降低運算成本，並學習目標字型的風格特徵，進而利用參考字型作為結構引導，生成缺失的字形圖像。
@@ -857,7 +857,7 @@ samples_[your_target_font]/
 
 > [!NOTE]
 > - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程
-> - 產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯工具，進行後續的微調與字型封裝作業
+> - 產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯軟體，進行後續的微調與字型封裝作業
 
 ---
 
@@ -889,17 +889,17 @@ samples_[your_target_font]/
 - Graphic 社編輯部、卵形｜葉忠宜（統籌．設計）。（2016–2020）。Typography 字誌 系列（Issue 01–06）。臉譜出版。
 - 柯志杰、蘇煒翔。（2019）。字型散步 Next：從台灣日常出發，無所不在的中文字型學。臉譜出版。
 
-### 資源網站
+### 線上資源
 - [justfont](https://justfont.com/)：台灣的字型設計與教育推廣品牌。
 - [Google Fonts](https://fonts.google.com/)：Google 提供的免費字型資源庫。
 - [BabelMap Online](https://www.babelstone.co.uk/Unicode/babelmap.html)：線上 Unicode 字元編碼查詢工具。
-- [Unicode 區段](https://zh.wikipedia.org/wiki/Unicode區段)：維基百科的 Unicode 區段介紹。
+- [Unicode 區段](https://zh.wikipedia.org/wiki/Unicode區段)：維基百科上關於 Unicode 區段的介紹。
 
 ---
 
 ## 🙏 特別感謝
 
-本專案得以完成，仰賴眾多開源社群與創作者無私貢獻的字型資源與工具，特此致謝：
+本專案得以完成，仰賴眾多開源社群、創作者及社群夥伴的無私貢獻，特此致謝：
 
 ### 字型資源
 - [Jigmo](https://kamichikoichi.github.io/jigmo/)：參考字型。
@@ -913,7 +913,10 @@ samples_[your_target_font]/
 - [Unihan 字集](https://www.unicode.org/charts/unihan.html)：Unihan 字集。
 
 ### 開發工具
-- [FontForge](https://fontforge.org/)：開源字型編輯器。
+- [FontForge](https://fontforge.org/)：開源字型編輯軟體。
+
+### 社群回饋
+- 感謝 bilibili UP 主 aikika 製作本專案 v1.0.0 的介紹與使用教學影片：[《AI 字體生成 / AI 造字：補全字形與 HanziGen 教程》](https://www.bilibili.com/video/BV1GLbpzkEdq/?spm_id_from=333.337.search-card.all.click&vd_source=83f8ee639740b4c776bb4a89f31d3610)。
 
 > [!NOTE]
 > - 本專案的程式碼採用 Apache License 2.0 授權條款
