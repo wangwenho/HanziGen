@@ -15,15 +15,15 @@
 
 「字生字」是一套基於深度學習的漢字字形補全系統，整合字型分析、缺字生成與字形向量化等自動化流程，可協助設計師加速字型開發與補全工作。本系統可應用於字型設計，亦適合作為教學與研究的實作範例。
 
-![workflow](assets/workflow.png)
+![workflow](./assets/workflow.png)
 
 > [!NOTE]
-> 各版本的更新內容請參閱 [GitHub Releases](https://github.com/wangwenho/HanziGen/releases) 或 [更新日誌](CHANGELOG.md)
+> 各版本的更新內容請參閱 [GitHub Releases](https://github.com/wangwenho/HanziGen/releases) 或 [更新日誌](./CHANGELOG.md)
 
 ### 方法概述
 本專案採用 **潛在擴散模型（Latent Diffusion Model, LDM）** 作為圖像生成核心。透過兩階段的訓練策略，模型能有效降低運算成本，並學習目標字型的風格特徵，進而利用參考字型作為結構引導，生成缺失的字形圖像。
 
-![mini_model](assets/mini_model.png)
+![mini_model](./assets/mini_model.png)
 
 ### 主要特色
 - **模組化流程**：整合字型分析至字形向量化一系列流程，並具備高度自訂性。
@@ -46,7 +46,7 @@
 - **訓練階段二**：利用訓練好的 VQ-VAE 將目標字形與參考字形編碼為潛在向量。接著，對目標向量加入雜訊，與參考向量拼接後，送入 U-Net 預測雜訊，以預測誤差（MSE）作為損失函數。
 - **推論階段**：從純雜訊出發，結合參考字形的潛在向量，透過 DDIM 去噪流程，在潛在空間中逐步去噪，最終解碼還原出缺失的目標字形圖像。
 
-![model_architecture](assets/model_architecture.png)
+![model_architecture](./assets/model_architecture.png)
 
 
 ---
@@ -55,7 +55,7 @@
 
 下圖展示了「字生字」在其他多種目標字型上的生成效果。第一排為參考字形圖像；第二排為模型生成的字形圖像；第三排為實際應有的目標字形圖像（未收錄者以虛線叉號標示）。
 
-![samples](assets/samples.png)
+![samples](./assets/samples.png)
 
 ---
 
@@ -146,8 +146,8 @@ fonts/
 此步驟將分析目標字型與參考字型在 [jf7000](https://justfont.com/jf7000) 與 [Unihan](https://www.unicode.org/charts/unihan.html) 字集中的漢字覆蓋情況，並產生對應的覆蓋與缺失字集。
 
 #### 3-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/analyze_font.sh`](scripts/sh/analyze_font.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/analyze_font.bat`](scripts/bat/analyze_font.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/analyze_font.sh`](./scripts/sh/analyze_font.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/analyze_font.bat`](./scripts/bat/analyze_font.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -262,8 +262,8 @@ charsets/
 此步驟將產生目標字型與參考字型的字形圖像，作為後續模型訓練所需的資料集。
 
 #### 4-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/prepare_dataset.sh`](scripts/sh/prepare_dataset.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/prepare_dataset.bat`](scripts/bat/prepare_dataset.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/prepare_dataset.sh`](./scripts/sh/prepare_dataset.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/prepare_dataset.bat`](./scripts/bat/prepare_dataset.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -327,8 +327,8 @@ data/
 此步驟將劃分訓練字集與驗證字集。
 
 #### 5-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/split_dataset.sh`](scripts/sh/split_dataset.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/split_dataset.bat`](scripts/bat/split_dataset.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/split_dataset.sh`](./scripts/sh/split_dataset.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/split_dataset.bat`](./scripts/bat/split_dataset.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -387,8 +387,8 @@ charsets/
 此步驟將訓練 VQ-VAE 模型，作為字形圖像的編碼與解碼模組。
 
 #### 6-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_vqvae.sh`](scripts/sh/train_vqvae.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/train_vqvae.bat`](scripts/bat/train_vqvae.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_vqvae.sh`](./scripts/sh/train_vqvae.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/train_vqvae.bat`](./scripts/bat/train_vqvae.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -419,7 +419,7 @@ charsets/
 > - 若要接續先前中斷的訓練，可將 `RESUME` 參數設為 `true`
 
 > [!NOTE]
-> - 如需進一步自訂 VQ-VAE 架構，請參考 [`configs/vqvae_config.py`](configs/vqvae_config.py) 中的 `VQVAEModelConfig` 類別
+> - 如需進一步自訂 VQ-VAE 架構，請參考 [`configs/vqvae_config.py`](./configs/vqvae_config.py) 中的 `VQVAEModelConfig` 類別
 
 #### 6-2 執行腳本
 - **Linux/WSL2 環境**
@@ -519,8 +519,8 @@ samples_[target_font]/
 此步驟將訓練 LDM，作為最終的字形生成模型。
 
 #### 7-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_ldm.sh`](scripts/sh/train_ldm.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/train_ldm.bat`](scripts/bat/train_ldm.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/train_ldm.sh`](./scripts/sh/train_ldm.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/train_ldm.bat`](./scripts/bat/train_ldm.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -554,7 +554,7 @@ samples_[target_font]/
 > - 若要接續先前中斷的訓練，可將 `RESUME` 參數設為 `true`
 
 > [!NOTE]
-> - 如需進一步自訂 LDM 架構，請參考 [`configs/ldm_config.py`](configs/ldm_config.py) 中的 `LDMModelConfig` 類別
+> - 如需進一步自訂 LDM 架構，請參考 [`configs/ldm_config.py`](./configs/ldm_config.py) 中的 `LDMModelConfig` 類別
 
 #### 7-2 執行腳本
 - **Linux/WSL2 環境**
@@ -647,8 +647,8 @@ samples_[target_font]/
 此步驟將計算 PSNR、SSIM、LPIPS 與 FID 等指標，以評估 LDM 生成之驗證集字形圖像的品質。
 
 #### 8-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/compute_metrics.sh`](scripts/sh/compute_metrics.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/compute_metrics.bat`](scripts/bat/compute_metrics.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/compute_metrics.sh`](./scripts/sh/compute_metrics.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/compute_metrics.bat`](./scripts/bat/compute_metrics.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -705,8 +705,8 @@ scripts\bat\compute_metrics.bat
 此步驟將利用訓練完成的 LDM 模型生成目標字形圖像。
 
 #### 9-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/inference.sh`](scripts/sh/inference.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/inference.bat`](scripts/bat/inference.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/inference.sh`](./scripts/sh/inference.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/inference.bat`](./scripts/bat/inference.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -805,8 +805,8 @@ samples_[your_target_font]/
 此步驟會將生成的點陣字形圖像轉換為對應的 SVG 向量圖形。
 
 #### 10-1 設定參數
-- **Linux/WSL2 環境**：開啟 [`scripts/sh/convert_to_svg.sh`](scripts/sh/convert_to_svg.sh)
-- **Windows 原生環境**：開啟 [`scripts/bat/convert_to_svg.bat`](scripts/bat/convert_to_svg.bat)
+- **Linux/WSL2 環境**：開啟 [`scripts/sh/convert_to_svg.sh`](./scripts/sh/convert_to_svg.sh)
+- **Windows 原生環境**：開啟 [`scripts/bat/convert_to_svg.bat`](./scripts/bat/convert_to_svg.bat)
 - 設定 `TARGET_FONT_PATH` 為你的目標字型路徑（例如：`"fonts/target_font.ttf"`）
 - 調整其他參數（可選）
 
@@ -865,7 +865,7 @@ samples_[your_target_font]/
 
 如下圖，在筆畫繁複或結構特殊的漢字上，模型可能產生結構錯誤或筆畫變形的結果。
 
-![fail_cases](assets/fail_cases.png)
+![fail_cases](./assets/fail_cases.png)
 
 ---
 
@@ -915,15 +915,11 @@ samples_[your_target_font]/
 ### 開發工具
 - [FontForge](https://fontforge.org/)：開源字型編輯軟體。
 
-### 社群回饋
-- 感謝 bilibili UP 主 aikika 製作本專案 v1.0.0 的介紹與使用教學影片：[《AI 字體生成 / AI 造字：補全字形與 HanziGen 教程》](https://www.bilibili.com/video/BV1GLbpzkEdq/?spm_id_from=333.337.search-card.all.click&vd_source=83f8ee639740b4c776bb4a89f31d3610)。
-
-> [!NOTE]
-> - 本專案的程式碼採用 Apache License 2.0 授權條款
-> - 本專案所引用的部分資源（如 jf7000 字集）可能受其原始授權條款（如 CC BY-SA 4.0）約束，使用時請遵循其原始規範
-  
 ---
 
 ## 📜 授權條款
 
-本專案採用 [Apache License 2.0 授權條款](LICENSE)。請參閱 `LICENSE` 檔案以獲取更多資訊。
+本專案採用 Apache License 2.0 授權條款，詳細內容請參閱 [授權條款](./LICENSE.md)。
+
+> [!NOTE]
+> - 本專案所引用的部分資源（如 jf7000 字集）可能受其原始授權條款（如 CC BY-SA 4.0）約束，使用時請遵循其原始規範
