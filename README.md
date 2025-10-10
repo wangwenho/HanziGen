@@ -116,8 +116,8 @@ pip install -r requirements.txt
    - 將下載的 `jigmo.ttf`、`jigmo2.ttf`、`jigmo3.ttf` 檔案放入 `fonts/jigmo/` 資料夾
 
 > [!CAUTION]
-> - 請確認目標字型的授權條款允許修改再發布
-> - 請確保目標字型的檔名不含空格或特殊字元
+> - 請確認目標字型的授權條款允許修改與再發布
+> - 請確保目標字型的檔名不含空格以及特殊字元
 
 > [!TIP]
 > - 建議選用至少包含 2000 個漢字的目標字型，以獲得更好的補全效果
@@ -247,9 +247,12 @@ charsets/
 │   └── ...
 └── ...
 ```
-- `jf7000_coverage/`：儲存字型對於 `jf7000` 字集的覆蓋結果。
-- `unihan_coverage/`：儲存字型對於 `Unihan` 字集的覆蓋結果。
-  - `[target_font]/`：以目標字型命名的子目錄。
+- `jf7000_coverage/`：儲存字型對於 `jf7000` 字集覆蓋結果的資料夾。
+  - `[target_font]/`：以目標字型命名的資料夾。
+    - `covered.txt`：目標字型覆蓋字集檔案。
+    - `missing.txt`：目標字型缺失字集檔案。
+- `unihan_coverage/`：儲存字型對於 `Unihan` 字集覆蓋結果的資料夾。
+  - `[target_font]/`：以目標字型命名的資料夾。
     - `covered.txt`：目標字型覆蓋字集檔案。
     - `missing.txt`：目標字型缺失字集檔案。
 
@@ -374,9 +377,10 @@ charsets/
 │   └── ...
 └── ...
 ```
-- `[target_font]/`：以目標字型命名的子目錄。
-  - `train.txt`：訓練字集檔案。
-  - `val.txt`：驗證字集檔案。
+- `splits/`：儲存字集劃分結果的資料夾。
+  - `[target_font]/`：以目標字型命名的資料夾。
+    - `train.txt`：訓練字集檔案。
+    - `val.txt`：驗證字集檔案。
 
 </details>
 
@@ -475,7 +479,7 @@ runs/
 │       └── events.out.tfevents.xxxxx
 └── ...
 ```
-- `VQVAE_[target_font]/`：以目標字型命名的子目錄。
+- `VQVAE_[target_font]/`：以目標字型命名的資料夾。
   - `YYYYMMDD_HHMMSS/`：以訓練啟動的時間戳記命名的資料夾。
     - `events.out.tfevents.xxxxx`：TensorBoard 訓練紀錄檔案。
 
@@ -503,13 +507,13 @@ samples_[target_font]/
 │       └── ...
 └── ...
 ```
-- `vqvae_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的子目錄。
-- `train/`：訓練樣本圖像資料夾。
-  - `epoch_0000_ref_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
-  - `epoch_0000_tgt_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
-- `val/`：驗證樣本圖像資料夾。
-  - `epoch_0000_ref_04E09.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
-  - `epoch_0000_tgt_056DB.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
+- `vqvae_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的資料夾。
+  - `train/`：訓練樣本圖像資料夾。
+    - `epoch_0000_ref_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
+    - `epoch_0000_tgt_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
+  - `val/`：驗證樣本圖像資料夾。
+    - `epoch_0000_ref_04E09.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為參考字形與重建字形。
+    - `epoch_0000_tgt_056DB.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左右兩個部分，分別為目標字形與重建字形。
 
 </details>
 
@@ -602,12 +606,12 @@ scripts\bat\train_ldm.bat
 
 ```
 runs/
-├── VQVAE_[target_font]/
+├── LDM_[target_font]/
 │   └── [YYYYMMDD_HHMMSS]/
 │       └── events.out.tfevents.xxxxx
 └── ...
 ```
-- `VQVAE_[target_font]/`：以目標字型命名的子目錄。
+- `LDM_[target_font]/`：以目標字型命名的資料夾。
   - `YYYYMMDD_HHMMSS/`：以訓練啟動的時間戳記命名的資料夾。
     - `events.out.tfevents.xxxxx`：TensorBoard 訓練紀錄檔案。
 
@@ -633,11 +637,11 @@ samples_[target_font]/
 │       └── ...
 └── ...
 ```
-- `ldm_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的子目錄。
-- `train/`：訓練樣本圖像資料夾。
-  - `epoch_0000_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
-- `val/`：驗證樣本圖像資料夾。
-  - `epoch_0000_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
+- `ldm_training_[YYYYMMDD_HHMMSS]/`：以訓練啟動的時間戳記命名的資料夾。
+  - `train/`：訓練樣本圖像資料夾。
+    - `epoch_0000_04E00.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
+  - `val/`：驗證樣本圖像資料夾。
+    - `epoch_0000_04E8C.png`：以當前週期與 Unicode 碼位命名的字形圖像檔案。圖像分為左中右三個部分，分別為參考字形、目標字形與生成字形。
 
 </details>
 
@@ -749,10 +753,11 @@ charsets/
 │   └── repeats.txt
 └── ...
 ```
-- `ordinals.txt`：序數字集檔案（中文數字、天干地支、十二生肖...）。
-- `periodic_table.txt`：元素週期表字集檔案（氫、氦、鋰、鈹...）。
-- `qianziwen.txt`：千字文字集檔案（天、地、玄、黃...）。
-- `repeats.txt`：疊字字集檔案（一、二、三、亖...）。
+- `test/`：範例字集資料夾。
+  - `ordinals.txt`：序數字集檔案（中文數字、天干地支、十二生肖...）。
+  - `periodic_table.txt`：元素週期表字集檔案（氫、氦、鋰、鈹...）。
+  - `qianziwen.txt`：千字文字集檔案（天、地、玄、黃...）。
+  - `repeats.txt`：疊字字集檔案（一、二、三、亖...）。
 
 </details>
 
@@ -773,7 +778,7 @@ scripts\bat\inference.bat
 <summary>📁 查看檔案結構</summary>
 
 ```
-samples_[your_target_font]/
+samples_[target_font]/
 ├── ldm_inference_[YYYYMMDD_HHMMSS]/
 │   └── infer/
 │       ├── gen/
@@ -787,14 +792,14 @@ samples_[your_target_font]/
 │           └── ...
 └── ...
 ```
-- `ldm_inference_[YYYYMMDD_HHMMSS]/`：以推論啟動的時間戳記命名的子目錄。
-- `infer/`：推論結果資料夾。
-  - `gen/`：生成字形圖像資料夾。
-    - `04E00.png`：生成字形圖像，檔名為 Unicode 碼位。
-  - `gt/`：真實字形圖像資料夾。
-    - `04E00.png`：真實字形圖像，檔名為 Unicode 碼位，若目標字型無收錄該字形則為空白圖像。
-  - `ref/`：參考字形圖像資料夾。
-    - `04E00.png`：參考字形圖像，檔名為 Unicode 碼位。
+- `ldm_inference_[YYYYMMDD_HHMMSS]/`：以推論啟動的時間戳記命名的資料夾。
+  - `infer/`：推論結果資料夾。
+    - `gen/`：生成字形圖像資料夾。
+      - `04E00.png`：生成字形圖像，檔名為 Unicode 碼位。
+    - `gt/`：真實字形圖像資料夾。
+      - `04E00.png`：真實字形圖像，檔名為 Unicode 碼位，若目標字型無收錄該字形則為空白圖像。
+    - `ref/`：參考字形圖像資料夾。
+      - `04E00.png`：參考字形圖像，檔名為 Unicode 碼位。
 
 </details>
 
@@ -842,22 +847,21 @@ scripts\bat\convert_to_svg.bat
 <summary>📁 查看檔案結構</summary>
 
 ```
-samples_[your_target_font]/
+samples_[target_font]/
 ├── ldm_inference_[YYYYMMDD_HHMMSS]/
 │   └── svg/
 │       ├── 04E00.svg
 │       └── ...
 └── ...
 ```
-- `ldm_inference_[YYYYMMDD_HHMMSS]/`：以推論啟動的時間戳記命名的子目錄。
-- `svg/`：向量字形圖像資料夾。
-  - `04E00.svg`：以 Unicode 碼位命名的向量字形檔案。
+- `ldm_inference_[YYYYMMDD_HHMMSS]/`：以推論啟動的時間戳記命名的資料夾。
+  - `svg/`：向量字形圖像資料夾。
+    - `04E00.svg`：以 Unicode 碼位命名的向量字形檔案。
 
 </details>
 
 > [!NOTE]
-> - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程
-> - 產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯軟體，進行後續的微調與字型封裝作業
+> - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程。產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯軟體，進行後續的微調與字型封裝作業
 
 ---
 
@@ -919,7 +923,7 @@ samples_[your_target_font]/
 
 ## 📜 授權條款
 
-本專案採用 Apache License 2.0 授權條款，詳細內容請參閱 [授權條款](./LICENSE.md)。
+本專案採用 Apache License 2.0 授權條款，詳細內容請參閱 [授權條款](./LICENSE)。
 
 > [!NOTE]
 > - 本專案所引用的部分資源（如 jf7000 字集）可能受其原始授權條款（如 CC BY-SA 4.0）約束，使用時請遵循其原始規範
