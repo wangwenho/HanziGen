@@ -8,11 +8,13 @@ from rich.table import Table
 from tqdm.rich import tqdm
 
 from configs.font_processing_config import FontProcessingConfig
-from utils.font.font_utils import (
+from utils.charset.charset_utils import (
     get_charset_paths,
-    get_font_paths,
     read_charset_from_file,
     write_charset_to_file,
+)
+from utils.font.font_utils import (
+    get_font_paths,
 )
 
 warnings.filterwarnings("ignore")

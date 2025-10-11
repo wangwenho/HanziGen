@@ -7,6 +7,7 @@ from PIL import Image
 from rich.console import Console
 from rich.table import Table
 from torch import Tensor
+from torch.amp import GradScaler, autocast
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import DataLoader
@@ -20,7 +21,7 @@ from datasets.image_dataset import PairedGlyphImageDataset
 from datasets.loader import Loader
 from models.unet.unet import UNet
 from models.vqvae.vqvae import VQVAE
-from utils.font.font_utils import read_charset_from_file
+from utils.charset.charset_utils import read_charset_from_file
 from utils.hardware.hardware_utils import select_device
 from utils.image.image_generator import GlyphImageGenerator
 from utils.image.image_utils import convert_tensor_to_pil_images, save_images
@@ -87,30 +88,40 @@ class LDM(nn.Module):
         # Move model to device
         self.to(self.device)
 
-    def _load_pretrained_vqvae(
+    def _freeze_vqvae(
+        self,
+    ) -> None:
+        """
+        Freeze VQ-VAE model parameters.
+        """
+        self.vqvae.eval()
+        for param in self.vqvae.parameters():
+            param.requires_grad = False
+
+    def _load_pretrained_vqvae_checkpoint(
         self,
         pretrained_vqvae_path: str | Path,
     ) -> None:
         """
-        Load pre-trained VQ-VAE model weights.
+        Load pre-trained VQ-VAE model weights from checkpoint.
         """
-        pretrained_vqvae_path = Path(pretrained_vqvae_path)
-
-        if not pretrained_vqvae_path.is_file():
+        pretrained_vqvae = Path(pretrained_vqvae_path)
+        if not pretrained_vqvae.exists():
             raise FileNotFoundError(
-                f"VQ-VAE checkpoint path {pretrained_vqvae_path} does not exist."
+                f"❌ Pretrained VQ-VAE model checkpoint not found: {pretrained_vqvae_path}"
+            )
+        if not pretrained_vqvae.is_file():
+            raise FileNotFoundError(
+                f"❌ Pretrained VQ-VAE model checkpoint is not a file: {pretrained_vqvae_path}"
             )
 
-        ckpt = torch.load(
+        print(f"📂 Loading pretrained VQ-VAE model checkpoint: {pretrained_vqvae_path}")
+        state_dict = torch.load(
             pretrained_vqvae_path,
             map_location=self.device,
             weights_only=True,
         )
-        self.vqvae.load_state_dict(ckpt)
-        self.vqvae.eval()
-
-        for param in self.vqvae.parameters():
-            param.requires_grad = False
+        self.vqvae.load_state_dict(state_dict)
 
     # ===== Core Operations =====
     def forward(
@@ -133,6 +144,7 @@ class LDM(nn.Module):
         batch: dict[str, Tensor],
         is_training: bool,
         optimizer: Optimizer | None = None,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Process a single batch of data.
@@ -140,21 +152,42 @@ class LDM(nn.Module):
         tgt_imgs = batch["tgt_img"].to(self.device)
         ref_imgs = batch["ref_img"].to(self.device)
 
-        batch_size = tgt_imgs.shape[0]
-        t = self.scheduler.sample_timesteps(batch_size)
+        if scaler is not None:
+            with autocast(device_type=self.device.type):
+                batch_size = tgt_imgs.shape[0]
+                t = self.scheduler.sample_timesteps(batch_size)
 
-        tgt_latents = self._encode_to_latent(tgt_imgs)
-        x_t, noise = self.scheduler.add_noise(tgt_latents, t)
-        ref_latents = self._encode_to_latent(ref_imgs)
+                tgt_latents = self._encode_to_latent(tgt_imgs)
+                x_t, noise = self.scheduler.add_noise(tgt_latents, t)
+                ref_latents = self._encode_to_latent(ref_imgs)
 
-        noise_pred = self(x_t, ref_latents, t)
-        loss = self.loss_fn(noise_pred, noise)
+                noise_pred = self(x_t, ref_latents, t)
+                loss = self.loss_fn(noise_pred, noise)
 
-        if is_training and optimizer is not None:
-            optimizer.zero_grad()
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
-            optimizer.step()
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                scaler.step(optimizer)
+                scaler.update()
+
+        else:
+            batch_size = tgt_imgs.shape[0]
+            t = self.scheduler.sample_timesteps(batch_size)
+
+            tgt_latents = self._encode_to_latent(tgt_imgs)
+            x_t, noise = self.scheduler.add_noise(tgt_latents, t)
+            ref_latents = self._encode_to_latent(ref_imgs)
+
+            noise_pred = self(x_t, ref_latents, t)
+            loss = self.loss_fn(noise_pred, noise)
+
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                optimizer.step()
 
         return loss.item()
 
@@ -180,26 +213,40 @@ class LDM(nn.Module):
         optimizer: Optimizer,
         scheduler: LRScheduler,
         training_config: LDMTrainingConfig,
+        resume: bool = False,
+        scaler: GradScaler | None = None,
     ) -> None:
         """
         Train the LDM and save the best model checkpoint.
         """
-        self._load_pretrained_vqvae(training_config.pretrained_vqvae_path)
+        if not resume:
+            self._load_pretrained_vqvae_checkpoint(
+                training_config.pretrained_vqvae_path
+            )
 
-        log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
+        # Freeze VQ-VAE parameters
+        self._freeze_vqvae()
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        base_sample_root = Path(training_config.sample_root)
+        training_config.sample_root = str(
+            base_sample_root / f"ldm_training_{timestamp}"
         )
+        print(f"📁 Training samples will be saved to: {training_config.sample_root}")
+
+        log_dir = Path(training_config.tensorboard_log_dir) / timestamp
         log_dir.mkdir(parents=True, exist_ok=True)
+        print(f"📊 TensorBoard logs will be saved to: {log_dir}")
 
         with SummaryWriter(log_dir) as writer:
-
             model_save_path = Path(training_config.model_save_path)
             model_save_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Save ground truth images for evaluation
             self._save_evaluation_ground_truth(
                 loader=loader,
-                split="eval_outputs/gt",
+                split=training_config.gt_split,
                 sample_root=training_config.sample_root,
             )
 
@@ -211,6 +258,7 @@ class LDM(nn.Module):
                 train_loss, val_loss = self._run_epoch(
                     loader=loader,
                     optimizer=optimizer,
+                    scaler=scaler,
                 )
 
                 # Update learning rate
@@ -264,6 +312,7 @@ class LDM(nn.Module):
         self,
         loader: Loader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> tuple[float, float]:
         """
         Run one epoch of training and validation.
@@ -271,8 +320,15 @@ class LDM(nn.Module):
         train_loader = loader.loader.train
         val_loader = loader.loader.val
 
-        train_loss = self._train_one_epoch(train_loader, optimizer)
-        val_loss = self._validate_one_epoch(val_loader)
+        train_loss = self._train_one_epoch(
+            train_loader=train_loader,
+            optimizer=optimizer,
+            scaler=scaler,
+        )
+        val_loss = self._validate_one_epoch(
+            val_loader=val_loader,
+            scaler=scaler,
+        )
 
         return train_loss, val_loss
 
@@ -280,6 +336,7 @@ class LDM(nn.Module):
         self,
         train_loader: DataLoader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Train the model for one epoch.
@@ -292,6 +349,7 @@ class LDM(nn.Module):
                 batch=batch,
                 is_training=True,
                 optimizer=optimizer,
+                scaler=scaler,
             )
             epoch_loss += batch_loss
 
@@ -301,6 +359,7 @@ class LDM(nn.Module):
     def _validate_one_epoch(
         self,
         val_loader: DataLoader,
+        scaler: GradScaler | None = None,
     ) -> float:
         """
         Validate the model for one epoch.
@@ -313,6 +372,7 @@ class LDM(nn.Module):
                 batch=batch,
                 is_training=False,
                 optimizer=None,
+                scaler=scaler,
             )
             epoch_loss += batch_loss
 
@@ -566,9 +626,12 @@ class LDM(nn.Module):
         split: str,
     ) -> None:
         """
-        Generate and saves combined images from a DataLoader.
+        Create a triple comparison image: Reference | Target | Generated
         """
         self.eval()
+
+        sample_dir = Path(training_config.sample_root) / split
+        sample_dir.mkdir(parents=True, exist_ok=True)
 
         batch = next(iter(loader))
         tgt_imgs = batch["tgt_img"].to(self.device)
@@ -579,9 +642,6 @@ class LDM(nn.Module):
             ref_imgs=ref_imgs,
             config=training_config,
         )
-
-        sample_dir = Path(training_config.sample_root) / split
-        sample_dir.mkdir(parents=True, exist_ok=True)
 
         for gen_pil_img, tgt_img, ref_img, img_name in zip(
             generated_pil_imgs, tgt_imgs, ref_imgs, img_names
@@ -613,6 +673,13 @@ class LDM(nn.Module):
         Generate images from a charset file.
         """
         self.eval()
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_sample_root = Path(inference_config.sample_root)
+        inference_config.sample_root = str(
+            base_sample_root / f"ldm_inference_{timestamp}"
+        )
+        print(f"📁 Inference samples will be saved to: {inference_config.sample_root}")
 
         tgt_generator = GlyphImageGenerator.from_target_font(
             target_font_path=target_font_path,

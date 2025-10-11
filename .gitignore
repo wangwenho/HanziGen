@@ -1,21 +1,22 @@
-# 📁 Font Resources and Dataset
-fonts/
-data/
+# Font Resources
+fonts*/
 
-# 📊 Charset Files
+# Dataset Files
+data*/
+
+# Charset Management
 charsets/jf7000_coverage/
 charsets/unihan_coverage/
 charsets/splits/
 
-# 🏋️ Model Checkpoints and Logs
-checkpoints/
-runs/
+# Training Outputs
+checkpoints*/
+runs*/
 
-# 🖼️ Generated Samples
+# Generated Content
 samples*/
-svgs*/
 
-# ⚙️ System and Editor Artifacts
+# System Files
 .vscode/
 __pycache__/
 .DS_Store

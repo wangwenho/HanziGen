@@ -12,7 +12,7 @@ class LDMDatasetConfig:
 
     splits_root: str = "charsets"
     split_ratios: tuple[float, float] = (0.8, 0.2)
-    random_seed: int = 2025
+    split_random_seed: int = 2025
     batch_size: int = 16
     num_workers: int = 4
 
@@ -48,8 +48,8 @@ class LDMTrainingConfig:
     sample_root: str = "samples"
     train_split: str = "train"
     val_split: str = "val"
-    gt_split: str = "eval_outputs/gt"
-    gen_split: str = "eval_outputs/gen"
+    gt_split: str = "eval/gt"
+    gen_split: str = "eval/gen"
 
     sample_steps: int = 50
 
@@ -67,9 +67,9 @@ class LDMInferenceConfig:
     pretrained_ldm_path: str = "checkpoints/ldm.pth"
 
     sample_root: str = "samples"
-    ref_split: str = "inference/ref"
-    gt_split: str = "inference/gt"
-    gen_split: str = "inference/gen"
+    ref_split: str = "infer/ref"
+    gt_split: str = "infer/gt"
+    gen_split: str = "infer/gen"
 
     batch_size: int = 16
     sample_steps: int = 50

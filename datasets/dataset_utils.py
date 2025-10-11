@@ -4,7 +4,7 @@ from pathlib import Path
 import torch
 from torch.utils.data import DataLoader, Dataset, Subset, random_split
 
-from utils.font.font_utils import write_charset_to_file
+from utils.charset.charset_utils import write_charset_to_file
 
 
 def split_dataset(

@@ -35,4 +35,4 @@ def print_model_params(model: nn.Module) -> None:
     else:
         formatted_params = str(params)
 
-    print(f"Total model parameters: {formatted_params}")
+    print(f"🔢 Total model parameters: {formatted_params}")

@@ -1,11 +1,14 @@
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import torch
 import torch.nn as nn
+from PIL import Image
 from rich.console import Console
 from rich.table import Table
 from torch import Tensor
+from torch.amp import GradScaler, autocast
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import DataLoader
@@ -15,6 +18,7 @@ from tqdm.rich import tqdm
 from configs.vqvae_config import VQVAEModelConfig, VQVAETrainingConfig
 from datasets.loader import Loader
 from utils.hardware.hardware_utils import select_device
+from utils.image.image_utils import convert_tensor_to_pil_images, save_images
 
 from .vqvae_encoder_decoder import VQVAEDecoder, VQVAEEncoder, VQVAEQuantizer
 
@@ -78,6 +82,7 @@ class VQVAE(nn.Module):
         batch: dict[str, Tensor],
         is_training: bool,
         optimizer: Optimizer | None = None,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Process a single batch of data.
@@ -85,21 +90,41 @@ class VQVAE(nn.Module):
         tgt_imgs = batch["tgt_img"].to(self.device)
         ref_imgs = batch["ref_img"].to(self.device)
 
-        tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
-        tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
+        if scaler is not None:
+            with autocast(device_type=self.device.type):
+                tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
+                tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
 
-        ref_x_recon, ref_vq_loss = self(ref_imgs)
-        ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
+                ref_x_recon, ref_vq_loss = self(ref_imgs)
+                ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
 
-        recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
-        vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
-        total_loss = recon_loss + vq_loss
+                recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
+                vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
+                total_loss = recon_loss + vq_loss
 
-        if is_training and optimizer is not None:
-            optimizer.zero_grad()
-            total_loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
-            optimizer.step()
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                scaler.scale(total_loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                scaler.step(optimizer)
+                scaler.update()
+        else:
+            tgt_x_recon, tgt_vq_loss = self(tgt_imgs)
+            tgt_recon_loss = self.loss_fn(tgt_x_recon, tgt_imgs)
+
+            ref_x_recon, ref_vq_loss = self(ref_imgs)
+            ref_recon_loss = self.loss_fn(ref_x_recon, ref_imgs)
+
+            recon_loss = (tgt_recon_loss + ref_recon_loss) / 2
+            vq_loss = (tgt_vq_loss + ref_vq_loss) / 2
+            total_loss = recon_loss + vq_loss
+
+            if is_training and optimizer is not None:
+                optimizer.zero_grad()
+                total_loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+                optimizer.step()
 
         losses = {
             "total": total_loss.item(),
@@ -116,17 +141,24 @@ class VQVAE(nn.Module):
         optimizer: Optimizer,
         scheduler: LRScheduler,
         training_config: VQVAETrainingConfig,
+        scaler: GradScaler | None = None,
     ) -> None:
         """
         Train the VQ-VAE model and save the best model checkpoint.
         """
-        log_dir = Path(training_config.tensorboard_log_dir) / datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        base_sample_root = Path(training_config.sample_root)
+        training_config.sample_root = str(
+            base_sample_root / f"vqvae_training_{timestamp}"
         )
+        print(f"📁 Training samples will be saved to: {training_config.sample_root}")
+
+        log_dir = Path(training_config.tensorboard_log_dir) / timestamp
         log_dir.mkdir(parents=True, exist_ok=True)
+        print(f"📊 TensorBoard logs will be saved to: {log_dir}")
 
         with SummaryWriter(log_dir) as writer:
-
             model_save_path = Path(training_config.model_save_path)
             model_save_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -138,6 +170,7 @@ class VQVAE(nn.Module):
                 train_losses, val_losses = self._run_epoch(
                     loader=loader,
                     optimizer=optimizer,
+                    scaler=scaler,
                 )
 
                 # Update learning rate
@@ -151,6 +184,12 @@ class VQVAE(nn.Module):
                     train_losses=train_losses,
                     val_losses=val_losses,
                     learning_rate=current_lr,
+                )
+
+                self._save_epoch_visualization_samples(
+                    loader=loader,
+                    training_config=training_config,
+                    epoch=epoch,
                 )
 
                 # Save the best model checkpoint
@@ -172,6 +211,7 @@ class VQVAE(nn.Module):
         self,
         loader: Loader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> tuple[dict[str, float], dict[str, float]]:
         """
         Run one epoch of training and validation.
@@ -179,8 +219,15 @@ class VQVAE(nn.Module):
         train_loader = loader.loader.train
         val_loader = loader.loader.val
 
-        train_losses = self._train_one_epoch(train_loader, optimizer)
-        val_losses = self._validate_one_epoch(val_loader)
+        train_losses = self._train_one_epoch(
+            train_loader=train_loader,
+            optimizer=optimizer,
+            scaler=scaler,
+        )
+        val_losses = self._validate_one_epoch(
+            val_loader=val_loader,
+            scaler=scaler,
+        )
 
         return train_losses, val_losses
 
@@ -188,6 +235,7 @@ class VQVAE(nn.Module):
         self,
         train_loader: DataLoader,
         optimizer: Optimizer,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Train the model for one epoch.
@@ -200,6 +248,7 @@ class VQVAE(nn.Module):
                 batch=batch,
                 is_training=True,
                 optimizer=optimizer,
+                scaler=scaler,
             )
             for k in epoch_losses.keys():
                 epoch_losses[k] += batch_losses[k]
@@ -213,6 +262,7 @@ class VQVAE(nn.Module):
     def _validate_one_epoch(
         self,
         val_loader: DataLoader,
+        scaler: GradScaler | None = None,
     ) -> dict[str, float]:
         """
         Validate the model for one epoch.
@@ -225,6 +275,7 @@ class VQVAE(nn.Module):
                 batch=batch,
                 is_training=False,
                 optimizer=None,
+                scaler=scaler,
             )
             for k in epoch_losses.keys():
                 epoch_losses[k] += batch_losses[k]
@@ -233,6 +284,97 @@ class VQVAE(nn.Module):
         return {
             loss_type: loss / num_batches for loss_type, loss in epoch_losses.items()
         }
+
+    @torch.no_grad()
+    def _save_epoch_visualization_samples(
+        self,
+        loader: Loader,
+        training_config: VQVAETrainingConfig,
+        epoch: int,
+    ) -> None:
+        """
+        Generate and save reconstruction sample images from training and validation loaders.
+        """
+        self.eval()
+
+        if (
+            epoch % training_config.img_save_interval != 0
+            and epoch != training_config.num_epochs - 1
+        ):
+            return
+
+        train_loader = loader.loader.train
+        val_loader = loader.loader.val
+
+        train_split = training_config.train_split
+        val_split = training_config.val_split
+
+        for data_split, data_loader in tqdm(
+            [(train_split, train_loader), (val_split, val_loader)],
+            desc="Generating samples images",
+        ):
+            self._generate_double_comparison_images(
+                loader=data_loader,
+                training_config=training_config,
+                epoch=epoch,
+                split=data_split,
+            )
+
+    # ===== Image Generation =====
+    @torch.no_grad()
+    def _generate_double_comparison_images(
+        self,
+        loader: DataLoader,
+        training_config: VQVAETrainingConfig,
+        epoch: int,
+        split: str,
+    ) -> None:
+        """
+        Generate double comparison images: Original | Reconstructed
+        """
+        self.eval()
+
+        sample_dir = Path(training_config.sample_root) / split
+        sample_dir.mkdir(parents=True, exist_ok=True)
+
+        batch = next(iter(loader))
+        tgt_imgs = batch["tgt_img"].to(self.device)
+        ref_imgs = batch["ref_img"].to(self.device)
+        img_names = batch["img_name"]
+
+        tgt_recon, _ = self(tgt_imgs)
+        ref_recon, _ = self(ref_imgs)
+
+        for orig_tgt, recon_tgt, orig_ref, recon_ref, img_name in zip(
+            tgt_imgs, tgt_recon, ref_imgs, ref_recon, img_names
+        ):
+            tgt_combined = self._create_combined_image(orig_tgt, recon_tgt)
+            tgt_img_path = sample_dir / f"epoch_{epoch:04d}_tgt_{img_name}.png"
+            tgt_combined.save(tgt_img_path)
+
+            ref_combined = self._create_combined_image(orig_ref, recon_ref)
+            ref_img_path = sample_dir / f"epoch_{epoch:04d}_ref_{img_name}.png"
+            ref_combined.save(ref_img_path)
+
+    def _create_combined_image(
+        self,
+        orig: Tensor,
+        recon: Tensor,
+    ) -> Image.Image:
+        """
+        Create a double comparison image: original | reconstructed.
+        """
+
+        orig_pil_img = convert_tensor_to_pil_images(orig)
+        recon_pil_img = convert_tensor_to_pil_images(recon)
+
+        width, height = orig_pil_img.width, orig_pil_img.height
+        combined_img = Image.new("L", (width * 2, height))
+
+        combined_img.paste(orig_pil_img, (0, 0))
+        combined_img.paste(recon_pil_img, (width, 0))
+
+        return combined_img
 
     # ===== Logging =====
     def _log_training_metrics(

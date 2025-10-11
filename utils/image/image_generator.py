@@ -7,7 +7,8 @@ from PIL import Image, ImageDraw, ImageFont
 from tqdm.rich import tqdm
 
 from configs.font_processing_config import FontProcessingConfig
-from utils.font.font_utils import get_font_paths, read_charset_from_file
+from utils.charset.charset_utils import read_charset_from_file
+from utils.font.font_utils import get_font_paths
 
 
 class GlyphImageGenerator:
