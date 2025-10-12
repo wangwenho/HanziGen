@@ -29,9 +29,9 @@ if "!TIMESTAMP!" == "auto" (
     )
     
     set "TIMESTAMP=!LATEST_TIME!"
-    echo 🤖 Auto-detected timestamp: !TIMESTAMP!
+    echo Auto-detected timestamp: !TIMESTAMP!
 ) else (
-    echo 📝 Using manual timestamp: !TIMESTAMP!
+    echo Using manual timestamp: !TIMESTAMP!
 )
 
 set "INPUT_DIR=%SAMPLE_ROOT%ldm_inference_!TIMESTAMP!/infer/gen/"
@@ -46,8 +46,8 @@ python convert_to_svg.py ^
     --opttolerance "%OPTTOLERANCE%"
 
 if %errorlevel% equ 0 (
-    echo ✅ SVG conversion completed successfully!
+    echo SVG conversion completed successfully!
 ) else (
-    echo ❌ SVG conversion failed!
+    echo SVG conversion failed!
     exit /b 1
 )

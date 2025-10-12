@@ -45,8 +45,8 @@ python train_ldm.py ^
     --use_amp "%USE_AMP%"
 
 if %errorlevel% equ 0 (
-    echo ✅ LDM training completed successfully!
+    echo LDM training completed successfully!
 ) else (
-    echo ❌ LDM training failed!
+    echo LDM training failed!
     exit /b 1
 )

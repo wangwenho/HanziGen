@@ -42,8 +42,8 @@ python train_ldm.py \
     --use_amp "$USE_AMP"
 
 if [ $? -eq 0 ]; then
-    echo "✅ LDM training completed successfully!"
+    echo "LDM training completed successfully!"
 else
-    echo "❌ LDM training failed!"
+    echo "LDM training failed!"
     exit 1
 fi

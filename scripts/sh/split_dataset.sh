@@ -15,8 +15,8 @@ python split_dataset.py \
     --device "$DEVICE"
 
 if [ $? -eq 0 ]; then
-    echo "✅ Charset extraction completed successfully!"
+    echo "Charset extraction completed successfully!"
 else
-    echo "❌ Charset extraction failed!"
+    echo "Charset extraction failed!"
     exit 1
 fi

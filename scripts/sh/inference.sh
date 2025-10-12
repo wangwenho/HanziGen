@@ -17,9 +17,9 @@ SAMPLE_ROOT="samples_${TARGET_FONT_NAME}/"
 
 if [ "$CHARSET_PATH" = "auto" ]; then
     CHARSET_PATH="charsets/jf7000_coverage/${TARGET_FONT_NAME}/missing.txt"
-    echo "🤖 Auto-detected charset path: $CHARSET_PATH"
+    echo "Auto-detected charset path: $CHARSET_PATH"
 else
-    echo "📝 Using manual charset path: $CHARSET_PATH"
+    echo "Using manual charset path: $CHARSET_PATH"
 fi
 
 python inference.py \
@@ -34,8 +34,8 @@ python inference.py \
     --device "$DEVICE"
 
 if [ $? -eq 0 ]; then
-    echo "✅ Inference completed successfully!"
+    echo "Inference completed successfully!"
 else
-    echo "❌ Inference failed!"
+    echo "Inference failed!"
     exit 1
 fi
