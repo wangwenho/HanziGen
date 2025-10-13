@@ -31,9 +31,4 @@ python convert_to_svg.py \
     --alphamax "$ALPHAMAX" \
     --opttolerance "$OPTTOLERANCE"
 
-if [ $? -eq 0 ]; then
-    echo "SVG conversion completed successfully!"
-else
-    echo "SVG conversion failed!"
-    exit 1
-fi
+exit $?

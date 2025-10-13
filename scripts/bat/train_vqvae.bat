@@ -36,9 +36,4 @@ python train_vqvae.py ^
     --resume "%RESUME%" ^
     --use_amp "%USE_AMP%"
 
-if %errorlevel% equ 0 (
-    echo VQ-VAE training completed successfully!
-) else (
-    echo VQ-VAE training failed!
-    exit /b 1
-)
+exit /b %errorlevel%

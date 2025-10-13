@@ -12,9 +12,4 @@ python analyze_font.py ^
     --analyze_target_font ^
     --analyze_reference_fonts
 
-if %errorlevel% equ 0 (
-    echo Font analysis completed successfully!
-) else (
-    echo Font analysis failed!
-    exit /b 1
-)
+exit /b %errorlevel%

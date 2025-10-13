@@ -27,9 +27,4 @@ python compute_metrics.py \
     --eval_batch_size "$EVAL_BATCH_SIZE" \
     --device "$DEVICE"
 
-if [ $? -eq 0 ]; then
-    echo "Metrics computation completed successfully!"
-else
-    echo "Metrics computation failed!"
-    exit 1
-fi
+exit $?

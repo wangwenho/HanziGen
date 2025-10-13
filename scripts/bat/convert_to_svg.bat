@@ -45,9 +45,4 @@ python convert_to_svg.py ^
     --alphamax "%ALPHAMAX%" ^
     --opttolerance "%OPTTOLERANCE%"
 
-if %errorlevel% equ 0 (
-    echo SVG conversion completed successfully!
-) else (
-    echo SVG conversion failed!
-    exit /b 1
-)
+exit /b %errorlevel%

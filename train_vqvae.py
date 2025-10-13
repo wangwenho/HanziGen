@@ -206,8 +206,12 @@ def main() -> None:
             resume=resume,
             use_amp=use_amp,
         )
+
+        print("✅ VQ-VAE training completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ VQ-VAE training failed")
         sys.exit(1)
 
 

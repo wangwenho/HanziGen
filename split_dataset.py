@@ -88,8 +88,12 @@ def main() -> None:
             dataset_config=dataset_config,
             device=device,
         )
+
+        print("✅ Charset splitting completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ Charset splitting failed")
         sys.exit(1)
 
 

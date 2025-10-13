@@ -23,9 +23,4 @@ python prepare_dataset.py \
     --img_size "$IMG_WIDTH" "$IMG_HEIGHT" \
     --sample_ratio "$SAMPLE_RATIO"
 
-if [ $? -eq 0 ]; then
-    echo "Dataset preparation completed successfully!"
-else
-    echo "Dataset preparation failed!"
-    exit 1
-fi
+exit $?

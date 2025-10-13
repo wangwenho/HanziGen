@@ -33,9 +33,4 @@ python inference.py \
     --img_size "$IMG_WIDTH" "$IMG_HEIGHT" \
     --device "$DEVICE"
 
-if [ $? -eq 0 ]; then
-    echo "Inference completed successfully!"
-else
-    echo "Inference failed!"
-    exit 1
-fi
+exit $?

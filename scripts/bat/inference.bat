@@ -36,9 +36,4 @@ python inference.py ^
     --img_size "%IMG_WIDTH%" "%IMG_HEIGHT%" ^
     --device "%DEVICE%"
 
-if %errorlevel% equ 0 (
-    echo Inference completed successfully!
-) else (
-    echo Inference failed!
-    exit /b 1
-)
+exit /b %errorlevel%

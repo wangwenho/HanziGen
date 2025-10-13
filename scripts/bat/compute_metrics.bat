@@ -41,9 +41,4 @@ python compute_metrics.py ^
     --eval_batch_size "%EVAL_BATCH_SIZE%" ^
     --device "%DEVICE%"
 
-if %errorlevel% equ 0 (
-    echo Metric computation completed successfully!
-) else (
-    echo Metric computation failed!
-    exit /b 1
-)
+exit /b %errorlevel%
