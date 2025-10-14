@@ -104,8 +104,12 @@ def main() -> None:
             source_charset_path=args.source_charset_path,
             font_processing_config=font_processing_config,
         )
+
+        print("✅ Dataset preparation completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ Dataset preparation failed")
         sys.exit(1)
 
 

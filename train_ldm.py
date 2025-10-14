@@ -245,8 +245,12 @@ def main() -> None:
             resume=resume,
             use_amp=use_amp,
         )
+
+        print("✅ LDM training completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ LDM training failed")
         sys.exit(1)
 
 

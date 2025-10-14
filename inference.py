@@ -164,8 +164,12 @@ def main() -> None:
             charset_path=args.charset_path,
             device=device,
         )
+
+        print("✅ Inference completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ Inference failed")
         sys.exit(1)
 
 

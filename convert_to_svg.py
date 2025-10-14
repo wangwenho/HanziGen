@@ -87,8 +87,12 @@ def main() -> None:
             output_dir=args.output_dir,
             converting_config=converting_config,
         )
+
+        print("✅ SVG conversion completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ SVG conversion failed")
         sys.exit(1)
 
 

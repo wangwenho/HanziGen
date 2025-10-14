@@ -20,9 +20,9 @@ set "SAMPLE_ROOT=samples_!FILENAME!/"
 
 if "%CHARSET_PATH%"=="auto" (
     set "CHARSET_PATH=charsets/jf7000_coverage/!FILENAME!/missing.txt"
-    echo 🤖 Auto-detected charset path: !CHARSET_PATH!
+    echo Auto-detected charset path: !CHARSET_PATH!
 ) else (
-    echo 📝 Using manual charset path: %CHARSET_PATH%
+    echo Using manual charset path: %CHARSET_PATH%
 )
 
 python inference.py ^
@@ -36,9 +36,4 @@ python inference.py ^
     --img_size "%IMG_WIDTH%" "%IMG_HEIGHT%" ^
     --device "%DEVICE%"
 
-if %errorlevel% equ 0 (
-    echo ✅ Inference completed successfully!
-) else (
-    echo ❌ Inference failed!
-    exit /b 1
-)
+exit /b %errorlevel%

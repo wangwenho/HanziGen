@@ -14,9 +14,4 @@ python split_dataset.py \
     --split_random_seed "$SPLIT_RANDOM_SEED" \
     --device "$DEVICE"
 
-if [ $? -eq 0 ]; then
-    echo "✅ Charset extraction completed successfully!"
-else
-    echo "❌ Charset extraction failed!"
-    exit 1
-fi
+exit $?

@@ -27,9 +27,9 @@ if "!TIMESTAMP!" == "auto" (
     )
     
     set "TIMESTAMP=!LATEST_TIME!"
-    echo 🤖 Auto-detected timestamp: !TIMESTAMP!
+    echo Auto-detected timestamp: !TIMESTAMP!
 ) else (
-    echo 📝 Using manual timestamp: !TIMESTAMP!
+    echo Using manual timestamp: !TIMESTAMP!
 )
 
 set "GENERATED_IMG_DIR=%SAMPLE_ROOT%ldm_training_!TIMESTAMP!/eval/gen/"
@@ -41,9 +41,4 @@ python compute_metrics.py ^
     --eval_batch_size "%EVAL_BATCH_SIZE%" ^
     --device "%DEVICE%"
 
-if %errorlevel% equ 0 (
-    echo ✅ Metric computation completed successfully!
-) else (
-    echo ❌ Metric computation failed!
-    exit /b 1
-)
+exit /b %errorlevel%

@@ -97,8 +97,12 @@ def main() -> None:
                 reference_fonts_dir=args.reference_fonts_dir,
                 font_processing_config=font_processing_config,
             )
+
+        print("✅ Font analysis completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ Font analysis failed")
         sys.exit(1)
 
 

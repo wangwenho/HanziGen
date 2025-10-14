@@ -67,8 +67,12 @@ def main() -> None:
             eval_batch_size=args.eval_batch_size,
             device=device,
         )
+
+        print("✅ Metric computation completed successfully")
+
     except ProjectValidationError as e:
         print(f"❌ {e}")
+        print("❌ Metric computation failed")
         sys.exit(1)
 
 

@@ -15,7 +15,7 @@ for %%f in ("%TARGET_FONT_PATH%") do (
 set "SOURCE_CHARSET_PATH=charsets/unihan_coverage/!FILENAME!/covered.txt"
 
 if exist "data" (
-    echo 🗑️  Removing existing data/ directory...
+    echo Removing existing data/ directory...
     rmdir /s /q "data"
 )
 
@@ -26,9 +26,4 @@ python prepare_dataset.py ^
     --img_size "%IMG_WIDTH%" "%IMG_HEIGHT%" ^
     --sample_ratio "%SAMPLE_RATIO%"
 
-if %errorlevel% equ 0 (
-    echo ✅ Dataset preparation completed successfully!
-) else (
-    echo ❌ Dataset preparation failed!
-    exit /b 1
-)
+exit /b %errorlevel%
