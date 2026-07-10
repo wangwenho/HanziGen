@@ -19,7 +19,7 @@ if exist "data" (
     rmdir /s /q "data"
 )
 
-python prepare_dataset.py ^
+uv run python prepare_dataset.py ^
     --target_font_path "%TARGET_FONT_PATH%" ^
     --reference_fonts_dir "%REFERENCE_FONTS_DIR%" ^
     --source_charset_path "%SOURCE_CHARSET_PATH%" ^

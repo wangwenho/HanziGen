@@ -1,22 +1,37 @@
-# Font Resources
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Font resources
 fonts*/
 
-# Dataset Files
+# Dataset
 data*/
 
-# Charset Management
+# Charset
 charsets/jf7000_coverage/
 charsets/unihan_coverage/
 charsets/splits/
 
-# Training Outputs
+# Training logs
 checkpoints*/
 runs*/
 
-# Generated Content
+# Generated samples
 samples*/
 
-# System Files
+# System files
 .vscode/
-__pycache__/
 .DS_Store
+
+# Copilot custom configurations
+.github/copilot-instructions.md
+.github/agents/
+.github/prompts/

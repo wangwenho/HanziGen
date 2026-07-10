@@ -22,7 +22,7 @@ set "MODEL_SAVE_PATH=checkpoints/vqvae_!FILENAME!.pth"
 set "TENSORBOARD_LOG_DIR=runs/VQVAE_!FILENAME!"
 set "SAMPLE_ROOT=samples_!FILENAME!/"
 
-python train_vqvae.py ^
+uv run python train_vqvae.py ^
     --split_ratios "%TRAIN_SPLIT_RATIO%" "%VAL_SPLIT_RATIO%" ^
     --split_random_seed "%SPLIT_RANDOM_SEED%" ^
     --batch_size "%BATCH_SIZE%" ^

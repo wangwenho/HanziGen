@@ -9,7 +9,7 @@ set "SPLIT_RANDOM_SEED=2025"
 set "DEVICE=cuda"
 
 REM ==================== DO NOT MODIFY BELOW ====================
-python split_dataset.py ^
+uv run python split_dataset.py ^
     --target_font_path "%TARGET_FONT_PATH%" ^
     --split_ratios "%TRAIN_SPLIT_RATIO%" "%VAL_SPLIT_RATIO%" ^
     --split_random_seed "%SPLIT_RANDOM_SEED%" ^

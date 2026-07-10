@@ -100,32 +100,22 @@ git clone https://github.com/wangwenho/HanziGen.git
 cd HanziGen
 ```
 
-#### 1-2 建立 Conda 環境
-
+#### 1-2 安裝 uv
+>
 > [!NOTE]
 >
-> - 若尚未安裝 Anaconda，請參考 [Anaconda 官方網站](https://www.anaconda.com/download/success) 安裝對應的平台版本
+> - 若尚未安裝 uv，請參考 [uv 官方網站](https://docs.astral.sh/uv/#installation) 安裝對應的平台版本
+
+#### 1-3 建立虛擬環境並安裝所需套件
 
 ```bash
-conda create -n hanzigen python=3.13 -y
-conda activate hanzigen
-```
-
-#### 1-3 安裝 PyTorch
-
-```bash
-pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu118
+uv sync
 ```
 
 > [!NOTE]
 >
-> - 若需安裝其他版本的 PyTorch，請參考 [PyTorch 官方網站](https://pytorch.org/get-started/previous-versions/) 取得對應的安裝指令
-
-#### 1-4 安裝其餘套件
-
-```bash
-pip install -r requirements.txt
-```
+> - 本專案預設安裝 **CUDA 11.8** 版本的 PyTorch。若需安裝其他版本，請參考 [uv 官方文檔](https://docs.astral.sh/uv/guides/integration/pytorch/#using-a-pytorch-index) 修改對應的 `pyproject.toml` 檔案區塊，並重新執行 `uv sync` 指令。
+>
 
 ---
 
