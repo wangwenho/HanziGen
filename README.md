@@ -100,13 +100,11 @@ git clone https://github.com/wangwenho/HanziGen.git
 cd HanziGen
 ```
 
-#### 1-2 安裝 uv
->
+#### 1-2 建立 uv 環境
+
 > [!NOTE]
 >
 > - 若尚未安裝 uv，請參考 [uv 官方網站](https://docs.astral.sh/uv/#installation) 安裝對應的平台版本
-
-#### 1-3 建立虛擬環境並安裝所需套件
 
 ```bash
 uv sync
@@ -114,8 +112,7 @@ uv sync
 
 > [!NOTE]
 >
-> - 本專案預設安裝 **CUDA 11.8** 版本的 PyTorch。若需安裝其他版本，請參考 [uv 官方文檔](https://docs.astral.sh/uv/guides/integration/pytorch/#using-a-pytorch-index) 修改對應的 `pyproject.toml` 檔案區塊，並重新執行 `uv sync` 指令。
->
+> - 本專案預設安裝 CUDA 11.8 版本的 PyTorch。若需調整為 CPU 或其他 CUDA 版本，請依 [uv 官方文檔](https://docs.astral.sh/uv/guides/integration/pytorch/#using-a-pytorch-index) 修改 [`pyproject.toml`](./pyproject.toml) 的索引設定，並執行 `uv sync` 同步環境。
 
 ---
 
