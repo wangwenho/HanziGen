@@ -13,13 +13,13 @@ dependencies = [
     "scikit-image==0.25.2",
     "lpips==0.1.4",
     "clean-fid==0.1.25",
-    # log
+    # logging
     "rich==14.0.0",
     "tqdm==4.67.1",
     "tensorboard==2.20.0",
     # others
     "einops==0.8.1",
-    "scipy==1.16",
+    "scipy==1.16.2",
     "matplotlib==3.10.1",
     "fonttools==4.57.0",
     "potracer==0.0.4"
