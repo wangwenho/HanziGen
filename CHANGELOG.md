@@ -1,5 +1,14 @@
 # 更新日誌
 
+## v1.2.0
+
+- 2026 年 7 月 11 日
+
+### 🔧 改進項目
+
+- 將專案套件管理工具從 Conda（`requirements.txt`）遷移至 [uv](https://docs.astral.sh/uv/)（[`pyproject.toml`](./pyproject.toml) / [`uv.lock`](./uv.lock)），以提升套件解析速度並簡化環境管理流程。
+- 修改 README 文件中建置環境段落的內容。
+
 ## v1.1.2
 
 - 2026 年 2 月 14 日
