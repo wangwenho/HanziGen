@@ -972,6 +972,7 @@ samples_[target_font]/
 > [!NOTE]
 >
 > - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程。產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯軟體，進行後續的微調與字型封裝作業
+> - 若已熟悉上述各步驟，亦可使用一鍵式管線腳本（`bash scripts/sh/pipeline.sh` 或 `scripts\bat\pipeline.bat`）執行完整流程
 
 ---
 
