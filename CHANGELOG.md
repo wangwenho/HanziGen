@@ -1,5 +1,22 @@
 # 更新日誌
 
+## v1.2.0
+
+- 2026 年 7 月 11 日
+
+### ✨ 新增功能
+
+- 新增一鍵式管線腳本（[`pipeline.sh`](./scripts/sh/pipeline.sh) 與 [`pipeline.bat`](./scripts/bat/pipeline.bat)），可自動執行從字型分析、模型訓練、字形生成到向量化的完整專案流程。
+
+### 🔧 改進項目
+
+- 將專案套件管理工具從 Conda（`requirements.txt`）遷移至 [uv](https://docs.astral.sh/uv/)（[`pyproject.toml`](./pyproject.toml) / [`uv.lock`](./uv.lock)），以提升套件解析速度並簡化環境管理流程。
+- 修改 README 文件中建置環境段落的內容。
+
+### 🐛 問題修復
+
+- 將 scipy 套件版本鎖定為 1.16.2，以避免在部分環境中出現與 clean-fid 套件的相容性問題。
+
 ## v1.1.2
 
 - 2026 年 2 月 14 日

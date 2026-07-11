@@ -100,32 +100,19 @@ git clone https://github.com/wangwenho/HanziGen.git
 cd HanziGen
 ```
 
-#### 1-2 建立 Conda 環境
+#### 1-2 建立 uv 環境
 
 > [!NOTE]
 >
-> - 若尚未安裝 Anaconda，請參考 [Anaconda 官方網站](https://www.anaconda.com/download/success) 安裝對應的平台版本
+> - 若尚未安裝 uv，請參考 [uv 官方網站](https://docs.astral.sh/uv/#installation) 安裝對應的平台版本
 
 ```bash
-conda create -n hanzigen python=3.13 -y
-conda activate hanzigen
-```
-
-#### 1-3 安裝 PyTorch
-
-```bash
-pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu118
+uv sync
 ```
 
 > [!NOTE]
 >
-> - 若需安裝其他版本的 PyTorch，請參考 [PyTorch 官方網站](https://pytorch.org/get-started/previous-versions/) 取得對應的安裝指令
-
-#### 1-4 安裝其餘套件
-
-```bash
-pip install -r requirements.txt
-```
+> - 本專案預設安裝 CUDA 11.8 版本的 PyTorch。若需調整為 CPU 或其他 CUDA 版本，請依 [uv 官方文檔](https://docs.astral.sh/uv/guides/integration/pytorch/#using-a-pytorch-index) 修改 [`pyproject.toml`](./pyproject.toml) 的索引設定，並執行 `uv sync` 同步環境。
 
 ---
 
@@ -985,6 +972,7 @@ samples_[target_font]/
 > [!NOTE]
 >
 > - 至此，您已完成從字型分析、模型訓練、字形生成到向量化的完整專案流程。產出的向量字形檔案（SVG）可匯入如 FontForge 等字型編輯軟體，進行後續的微調與字型封裝作業
+> - 若已熟悉上述各步驟，亦可使用一鍵式管線腳本（`bash scripts/sh/pipeline.sh` 或 `scripts\bat\pipeline.bat`）執行完整流程
 
 ---
 

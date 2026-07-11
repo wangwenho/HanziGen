@@ -35,7 +35,7 @@ if "!TIMESTAMP!" == "auto" (
 set "GENERATED_IMG_DIR=%SAMPLE_ROOT%ldm_training_!TIMESTAMP!/eval/gen/"
 set "GROUND_TRUTH_IMG_DIR=%SAMPLE_ROOT%ldm_training_!TIMESTAMP!/eval/gt/"
 
-python compute_metrics.py ^
+uv run python compute_metrics.py ^
     --generated_img_dir "%GENERATED_IMG_DIR%" ^
     --ground_truth_img_dir "%GROUND_TRUTH_IMG_DIR%" ^
     --eval_batch_size "%EVAL_BATCH_SIZE%" ^

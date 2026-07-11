@@ -37,7 +37,7 @@ if "!TIMESTAMP!" == "auto" (
 set "INPUT_DIR=%SAMPLE_ROOT%ldm_inference_!TIMESTAMP!/infer/gen/"
 set "OUTPUT_DIR=%SAMPLE_ROOT%ldm_inference_!TIMESTAMP!/svg/"
 
-python convert_to_svg.py ^
+uv run python convert_to_svg.py ^
     --input_dir "%INPUT_DIR%" ^
     --output_dir "%OUTPUT_DIR%" ^
     --blacklevel "%BLACKLEVEL%" ^

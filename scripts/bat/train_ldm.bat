@@ -26,7 +26,7 @@ set "MODEL_SAVE_PATH=checkpoints/ldm_!FILENAME!.pth"
 set "TENSORBOARD_LOG_DIR=runs/LDM_!FILENAME!/"
 set "SAMPLE_ROOT=samples_!FILENAME!/"
 
-python train_ldm.py ^
+uv run python train_ldm.py ^
     --split_ratios "%TRAIN_SPLIT_RATIO%" "%VAL_SPLIT_RATIO%" ^
     --split_random_seed "%SPLIT_RANDOM_SEED%" ^
     --batch_size "%BATCH_SIZE%" ^

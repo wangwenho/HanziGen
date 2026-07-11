@@ -22,7 +22,7 @@ else
     echo "Using manual charset path: $CHARSET_PATH"
 fi
 
-python inference.py \
+uv run python inference.py \
     --target_font_path "$TARGET_FONT_PATH" \
     --reference_fonts_dir "$REFERENCE_FONTS_DIR" \
     --charset_path "$CHARSET_PATH" \
