@@ -12,10 +12,10 @@ wheels/
 # Font resources
 fonts*/
 
-# Dataset
+# Datasets
 data*/
 
-# Charset
+# Charsets
 charsets/jf7000_coverage/
 charsets/unihan_coverage/
 charsets/splits/
