@@ -1,5 +1,16 @@
 # 更新日誌
 
+## v1.3.0
+
+- 2026 年 9 月 10 日
+
+### 📚 論文引用
+
+- 本專案論文 [HanziGen: Supervised High-Fidelity Chinese Font Generation via Latent Diffusion Models](https://doi.org/10.1109/ICCE-Taiwan71481.2026.11652402) 已正式收錄於 [IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/11652402)。
+- README 開頭新增 ICCE-Taiwan 論文收錄 badge 與 DeepWiki badge，並於文末新增 BibTeX 引用區塊。
+- 新增 [`CITATION.cff`](./CITATION.cff) 引用檔，供 GitHub「Cite this repository」與其他工具使用。
+- 更新 [`pyproject.toml`](./pyproject.toml) 版本號至 1.3.0。
+
 ## v1.2.0
 
 - 2026 年 7 月 11 日

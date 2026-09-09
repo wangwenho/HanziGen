@@ -7,16 +7,19 @@
 ![Stars](https://img.shields.io/github/stars/wangwenho/HanziGen?style=for-the-badge&labelColor=edebe5&color=c1b8aa&logo=github&logoColor=black)
 ![License](https://img.shields.io/github/license/wangwenho/HanziGen?style=for-the-badge&labelColor=edebe5&color=c1b8aa&logo=apache&logoColor=black)
 ![Release](https://img.shields.io/github/v/release/wangwenho/HanziGen?style=for-the-badge&labelColor=edebe5&color=c1b8aa&logo=semver&logoColor=black)
+[![ICCE-Taiwan 2026](https://img.shields.io/static/v1?style=for-the-badge&label=ICCE-Taiwan%202026&message=Published&labelColor=edebe5&color=c1b8aa&logo=ieee&logoColor=black)](https://doi.org/10.1109/ICCE-Taiwan71481.2026.11652402)
 
 [![Translate to English](https://img.shields.io/badge/Translate-English-blue?style=for-the-badge&labelColor=edebe5&logo=google-translate&logoColor=black)](https://translate.google.com/translate?sl=zh-TW&tl=en&u=https://github.com/wangwenho/HanziGen)
 [![Translate to Japanese](https://img.shields.io/badge/Translate-Japanese-blue?style=for-the-badge&labelColor=edebe5&logo=google-translate&logoColor=black)](https://translate.google.com/translate?sl=zh-TW&tl=ja&u=https://github.com/wangwenho/HanziGen)
-[![Translate to Korean](https://img.shields.io/badge/Translate-Korean-blue?style=for-the-badge&labelColor=edebe5&logo=google-translate&logoColor=black)](https://translate.google.com/translate?sl=zh-TW&tl=ko&u=https://github.com/wangwenho/HanziGen)
+[![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-blue?style=for-the-badge&labelColor=edebe5&logo=readthedocs&logoColor=black)](https://deepwiki.com/wangwenho/HanziGen)
 
 </div>
 
 ## 📌 專案簡介
 
-字生字 (HanziGen) 是一套基於深度學習的漢字字型生成與補全系統。本系統整合了字型分析、模型訓練與缺字生成等自動化流程，旨在協助設計師加速字型的開發與補全工作。
+本專案為論文〈[HanziGen: Supervised High-Fidelity Chinese Font Generation via Latent Diffusion Models](https://doi.org/10.1109/ICCE-Taiwan71481.2026.11652402)〉之官方實作，該論文已發表於 2026 IEEE ICCE-Taiwan。
+
+本系統整合了字型分析、模型訓練與缺字生成等自動化流程，旨在協助設計師加速字型的開發與補全工作。
 
 ![pipeline](./assets/pipeline.svg)
 
@@ -1039,6 +1042,23 @@ samples_[target_font]/
 - [FontForge](https://fontforge.org/)：開源字型編輯軟體。
 
 ---
+
+## 📖 專案引用
+
+若本專案對您的研究有所幫助，歡迎引用此論文：
+
+```bibtex
+@inproceedings{wang2026hanzigen,
+  author    = {Wang, Wen-Ho and Su, Po-Chyi},
+  booktitle = {2026 IEEE International Conference on Consumer Electronics - Taiwan (ICCE-Taiwan)},
+  title     = {HanziGen: Supervised High-Fidelity Chinese Font Generation via Latent Diffusion Models},
+  year      = {2026},
+  pages     = {915--916},
+  month     = jul,
+  publisher = {IEEE},
+  doi       = {10.1109/ICCE-Taiwan71481.2026.11652402}
+}
+```
 
 ## 📜 授權條款
 
