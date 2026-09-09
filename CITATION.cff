@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: |-
+  If you use HanziGen in your research, please cite both the software
+  and its paper as described in the preferred-citation below.
+title: "HanziGen"
+abstract: >-
+  HanziGen is a deep-learning-based Chinese font generation and completion
+  system. It combines a VQ-VAE with a latent diffusion model (LDM) to
+  synthesize missing glyphs in a target font style conditioned on reference glyphs.
+keywords:
+  - chinese-font-generation
+  - font-completion
+  - latent-diffusion-model
+  - vq-vae
+  - deep-learning
+license: Apache-2.0
+version: 1.3.0
+date-released: 2026-09-10
+authors:
+  - family-names: Wang
+    given-names: Wen-Ho
+    orcid: https://orcid.org/0009-0002-4667-8151
+    affiliation: "National Central University, Taoyuan, Taiwan"
+  - family-names: Su
+    given-names: Po-Chyi
+    affiliation: "National Central University, Taoyuan, Taiwan"
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: Wang
+      given-names: Wen-Ho
+      orcid: https://orcid.org/0009-0002-4667-8151
+    - family-names: Su
+      given-names: Po-Chyi
+  title: "HanziGen: Supervised High-Fidelity Chinese Font Generation via Latent Diffusion Models"
+  conference:
+    name: "2026 IEEE International Conference on Consumer Electronics - Taiwan (ICCE-Taiwan)"
+    location: Taoyuan, Taiwan
+    date-start: 2026-07-01
+    date-end: 2026-07-03
+  publisher:
+    name: IEEE
+  pages: "915-916"
+  year: 2026
+  month: 7
+  doi: 10.1109/ICCE-Taiwan71481.2026.11652402

@@ -8,15 +8,7 @@ from .unet_encoder_decoder import UNetBottleneck, UNetDecoder, UNetEncoder
 
 class UNet(nn.Module):
     """
-    UNet model with encoder, bottleneck, and decoder components.
-
-    - Encoder: Downsampling blocks with optional self-attention and cross-attention.
-    - Bottleneck: Intermediate processing block.
-    - Decoder: Upsampling blocks with optional self-attention and cross-attention.
-
-    Args:
-        model_config: Model configuration.
-        device: Device to run the model on (e.g., 'mps', 'cuda', 'cpu').
+    UNet.
     """
 
     # ===== Initialization =====
